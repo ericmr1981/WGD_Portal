@@ -1,0 +1,18 @@
+[
+  {
+    "id": "admin",
+    "username": "admin",
+    "password": "925d2e9bb3679c1b9dd58ab20bb974fdc61f3ff4db5e12bb54fab0600261c7b3",
+    "name": "管理员",
+    "role": "admin",
+    "createdAt": "2026-05-03"
+  },
+  {
+    "id": "user-001",
+    "username": "zhangsan",
+    "password": "925d2e9bb3679c1b9dd58ab20bb974fdc61f3ff4db5e12bb54fab0600261c7b3",
+    "name": "张三",
+    "role": "user",
+    "createdAt": "2026-05-03"
+  }
+]
