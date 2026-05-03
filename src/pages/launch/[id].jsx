@@ -26,8 +26,7 @@ export default function LaunchPage() {
     }
 
     setStatus('redirecting')
-    window.open(app.url, '_blank')
-    setTimeout(() => router.back(), 500)
+    window.location.href = app.url
   }, [router.isReady, id])
 
   if (status === 'not_found') {
