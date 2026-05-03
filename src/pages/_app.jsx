@@ -1,5 +1,4 @@
 import '../styles/globals.css'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getSession } from '../lib/auth'
 import { motion, AnimatePresence } from 'framer-motion'

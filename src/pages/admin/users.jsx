@@ -29,6 +29,8 @@ export default function AdminUsersPage() {
   const refresh = () => setUsers([...getUsers()])
 
   const handleSave = async () => {
+    if (!form.username.trim() || !form.name.trim()) return
+    if (modal.mode === 'add' && !form.password.trim()) return
     if (modal.mode === 'add') {
       addUser({
         id: generateId(),

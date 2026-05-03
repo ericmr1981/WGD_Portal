@@ -40,6 +40,7 @@ export default function AdminAppsPage() {
   const refresh = () => setApps([...loadApps()])
 
   const handleSave = () => {
+    if (!form.name.trim() || !form.url.trim()) return
     if (modal.mode === 'add') {
       addApp({ id: generateId(), ...form, order: apps.length + 1 })
     } else {
