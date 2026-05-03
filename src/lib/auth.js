@@ -18,7 +18,9 @@ function loadUsers() {
       return usersData.map(u => {
         const override = overrides.find(o => o.id === u.id)
         return override ? { ...u, ...override } : u
-      })
+      }).concat(
+        overrides.filter(o => !usersData.find(u => u.id === o.id))
+      )
     }
   } catch {}
   return usersData
