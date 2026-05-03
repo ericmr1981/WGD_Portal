@@ -34,5 +34,14 @@
     "category": "数据分析",
     "description": "应用性能监控平台",
     "order": 4
+  },
+  {
+    "id": "app-005",
+    "name": "Gelato MiiX",
+    "url": "https://gelatomiiix.streamlit.app/",
+    "icon": "custom",
+    "category": "数据分析",
+    "description": "Streamlit 数据分析应用",
+    "order": 5
   }
 ]
