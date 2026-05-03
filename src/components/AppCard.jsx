@@ -18,9 +18,8 @@ const iconLetters = {
 export default function AppCard({ app, index }) {
   return (
     <motion.a
-      href={app.url}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={`/launch/${app.id}`}
+      target="_self"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
