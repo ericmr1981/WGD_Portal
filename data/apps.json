@@ -1,47 +1,11 @@
 [
   {
-    "id": "app-001",
-    "name": "GitHub",
-    "url": "https://github.com",
-    "icon": "github",
-    "category": "开发工具",
-    "description": "代码托管与协作平台",
-    "order": 1
-  },
-  {
-    "id": "app-002",
-    "name": "Jira",
-    "url": "https://jira.company.com",
-    "icon": "jira",
-    "category": "项目管理",
-    "description": "项目任务跟踪管理",
-    "order": 2
-  },
-  {
-    "id": "app-003",
-    "name": "Slack",
-    "url": "https://slack.com",
-    "icon": "slack",
-    "category": "沟通协作",
-    "description": "团队即时通讯工具",
-    "order": 3
-  },
-  {
-    "id": "app-004",
-    "name": "Datadog",
-    "url": "https://datadog.com",
-    "icon": "datadog",
-    "category": "数据分析",
-    "description": "应用性能监控平台",
-    "order": 4
-  },
-  {
     "id": "app-005",
     "name": "Gelato MiiX",
     "url": "https://gelatomiiix.streamlit.app/",
     "icon": "custom",
     "category": "数据分析",
     "description": "Streamlit 数据分析应用",
-    "order": 5
+    "order": 1
   }
 ]
