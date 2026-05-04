@@ -15,10 +15,10 @@ export default function GlassNav() {
   return (
     <nav className="glass border-b border-white/5 sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <button onClick={() => router.push('/')} className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple" />
           <span className="text-white font-bold text-lg">WGD Portal</span>
-        </div>
+        </button>
 
         {/* Desktop right */}
         <div className="hidden sm:flex items-center gap-4">

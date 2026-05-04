@@ -10,6 +10,7 @@ import { getUsers } from '../../lib/auth'
 export default function AdminPage() {
   const router = useRouter()
   const [authorized, setAuthorized] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (!getSession()) {
@@ -30,9 +31,14 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <GlassNav />
-      <div className="flex flex-1">
-        <AdminSidebar />
-        <main className="flex-1 p-6 overflow-auto">
+      <div className="flex flex-1 overflow-x-hidden">
+        {/* Mobile sidebar toggle */}
+        <button onClick={() => setSidebarOpen(true)}
+                className="sm:hidden fixed left-3 bottom-20 z-30 glass rounded-full w-12 h-12 flex items-center justify-center text-lg shadow-lg">
+          📋
+        </button>
+        <AdminSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <main className="flex-1 p-6 overflow-x-hidden max-w-full">
           <h1 className="text-2xl font-bold text-white mb-6">管理概览</h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">

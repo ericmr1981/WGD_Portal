@@ -28,6 +28,7 @@ export default function AdminAppsPage() {
   const [form, setForm] = useState(emptyForm)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [dragId, setDragId] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (!getSession()) { router.replace('/login'); return }
@@ -83,9 +84,13 @@ export default function AdminAppsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <GlassNav />
-      <div className="flex flex-1">
-        <AdminSidebar />
-        <main className="flex-1 p-6 overflow-auto pb-20 sm:pb-6">
+      <div className="flex flex-1 overflow-x-hidden">
+        <button onClick={() => setSidebarOpen(true)}
+                className="sm:hidden fixed left-3 bottom-20 z-30 glass rounded-full w-12 h-12 flex items-center justify-center text-lg shadow-lg">
+          📋
+        </button>
+        <AdminSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <main className="flex-1 p-6 overflow-x-hidden max-w-full">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold text-white">应用管理</h1>
             <GlassButton onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }) }}>
