@@ -118,13 +118,12 @@ export default function AdminAppsPage() {
                     } flex items-center justify-center text-white font-medium text-sm`}>
                       {app.name?.charAt(0) || '?'}
                     </div>
-                    <div>
+                    <div className="flex flex-col">
                       <p className="text-white font-medium text-sm">{app.name}</p>
-                      <p className="text-gray-500 text-xs">{app.url}</p>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-gray-400 border border-white/10 w-fit mt-1">
+                        {app.category}
+                      </span>
                     </div>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-gray-400 border border-white/10">
-                      {app.category}
-                    </span>
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => openEdit(app)} className="text-xs text-gray-400 hover:text-white transition-colors">编辑</button>
