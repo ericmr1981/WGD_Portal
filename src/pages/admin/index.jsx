@@ -4,13 +4,15 @@ import { getSession, isAdmin } from '../../lib/auth'
 import GlassNav from '../../components/GlassNav'
 import AdminSidebar from '../../components/AdminSidebar'
 import GlassCard from '../../components/GlassCard'
-import { loadApps, getConfig } from '../../lib/data'
-import { getUsers } from '../../lib/auth'
+import { getApps, getConfig, getUsers } from '../../lib/data'
 
 export default function AdminPage() {
   const router = useRouter()
   const [authorized, setAuthorized] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [users, setUsers] = useState([])
+  const [apps, setApps] = useState([])
+  const config = getConfig()
 
   useEffect(() => {
     if (!getSession()) {
@@ -19,20 +21,17 @@ export default function AdminPage() {
       router.replace('/')
     } else {
       setAuthorized(true)
+      getUsers().then(setUsers)
+      getApps().then(setApps)
     }
   }, [])
 
   if (!authorized) return null
 
-  const users = getUsers()
-  const apps = loadApps()
-  const config = getConfig()
-
   return (
     <div className="min-h-screen flex flex-col">
       <GlassNav />
       <div className="flex flex-1 overflow-x-hidden">
-        {/* Mobile sidebar toggle */}
         <button onClick={() => setSidebarOpen(true)}
                 className="sm:hidden fixed left-3 bottom-20 z-30 glass rounded-full w-12 h-12 flex items-center justify-center text-lg shadow-lg">
           📋
