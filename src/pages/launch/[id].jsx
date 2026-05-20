@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { getSession } from '../../lib/auth'
-import { loadApps } from '../../lib/data'
+import { getApps } from '../../lib/data'
 
 export default function LaunchPage() {
   const router = useRouter()
@@ -16,15 +16,14 @@ export default function LaunchPage() {
       return
     }
 
-    const apps = loadApps()
-    const app = apps.find(a => a.id === id)
-
-    if (!app) {
-      router.replace('/')
-      return
-    }
-
-    window.location.replace(app.url)
+    getApps().then((apps) => {
+      const app = apps.find(a => a.id === id)
+      if (!app) {
+        router.replace('/')
+        return
+      }
+      window.location.replace(app.url)
+    })
   }, [router.isReady, id])
 
   return (
