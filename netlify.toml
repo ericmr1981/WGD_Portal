@@ -2,6 +2,10 @@
   command = "npm run build"
   publish = "out"
 
+[[edge_functions]]
+  function = "proxy"
+  path = "/go/*"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -1,6 +1,16 @@
 import { supabase } from './supabase'
 
 const STORAGE_KEY = 'wgd_session'
+const COOKIE_KEY = 'wgd_session'
+
+function setSessionCookie(session) {
+  const encoded = btoa(JSON.stringify(session))
+  document.cookie = `${COOKIE_KEY}=${encoded}; path=/; SameSite=Lax; max-age=86400`
+}
+
+function clearSessionCookie() {
+  document.cookie = `${COOKIE_KEY}=; path=/; SameSite=Lax; max-age=0`
+}
 
 export async function login(username, password) {
   const { data, error } = await supabase.rpc('login_user', {
@@ -21,6 +31,7 @@ export async function login(username, password) {
       role: data.user.role,
     }
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    setSessionCookie(session)
     return session
   }
 
@@ -29,6 +40,7 @@ export async function login(username, password) {
 
 export function logout() {
   sessionStorage.removeItem(STORAGE_KEY)
+  clearSessionCookie()
 }
 
 export function getSession() {

@@ -22,7 +22,7 @@ export default function LaunchPage() {
         router.replace('/')
         return
       }
-      window.location.replace(app.url)
+      router.replace('/go/' + id)
     })
   }, [router.isReady, id])
 
