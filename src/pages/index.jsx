@@ -1,26 +1,30 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import GlassNav from '../components/GlassNav'
 import SearchBar from '../components/SearchBar'
 import CategoryTabs from '../components/CategoryTabs'
 import AppCard from '../components/AppCard'
-import { loadApps, getConfig } from '../lib/data'
+import { getApps, getConfig } from '../lib/data'
 import { isAdmin } from '../lib/auth'
 import { useRouter } from 'next/router'
 
 export default function HomePage() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('全部')
+  const [apps, setApps] = useState([])
   const router = useRouter()
 
   const config = getConfig()
-  const apps = loadApps()
-  const categories = ['全部', ...config.categories]
+  const categories = ['全部', ...(config.categories || [])]
+
+  useEffect(() => {
+    getApps().then(setApps)
+  }, [])
 
   const filtered = useMemo(() => {
     return apps.filter((app) => {
       const matchCategory = category === '全部' || app.category === category
       const matchSearch = !search || app.name.toLowerCase().includes(search.toLowerCase()) ||
-                          app.description.toLowerCase().includes(search.toLowerCase())
+                          (app.description || '').toLowerCase().includes(search.toLowerCase())
       return matchCategory && matchSearch
     })
   }, [apps, category, search])
