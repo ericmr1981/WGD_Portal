@@ -1,64 +1,136 @@
-import appsData from '../../data/apps.json'
+import { supabase } from './supabase'
+import { getSession } from './auth'
 import configData from '../../data/config.json'
 
 export function getConfig() {
   return configData
 }
 
-export function loadApps() {
-  try {
-    const local = localStorage.getItem('wgd_apps_override')
-    if (local) {
-      const overrides = JSON.parse(local)
-      return appsData.map(a => {
-        const override = overrides.find(o => o.id === a.id)
-        return override ? { ...a, ...override } : a
-      }).concat(
-        overrides.filter(o => !appsData.find(a => a.id === o.id))
-      )
-    }
-  } catch {}
-  return appsData
+// ---- Apps ----
+
+export async function getApps() {
+  const { data, error } = await supabase.rpc('get_apps')
+  if (error) {
+    console.error('getApps error:', error)
+    return []
+  }
+  return data || []
 }
 
-function saveApps(apps) {
-  localStorage.setItem('wgd_apps_override', JSON.stringify(apps))
+export async function upsertApp({ id, name, url, category, order, icon, description }) {
+  const session = getSession()
+  if (!session) return { success: false, error: '未登录' }
+
+  const { data, error } = await supabase.rpc('admin_upsert_app', {
+    admin_id: session.id,
+    p_id: id || null,
+    p_name: name,
+    p_url: url,
+    p_category: category,
+    p_order: order,
+    p_icon: icon || '',
+    p_description: description || '',
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
 }
 
-export function addApp(app) {
-  const apps = loadApps()
-  apps.push(app)
-  saveApps(apps)
-  return apps
+export async function deleteApp(appId) {
+  const session = getSession()
+  if (!session) return { success: false, error: '未登录' }
+
+  const { data, error } = await supabase.rpc('admin_delete_app', {
+    admin_id: session.id,
+    app_id: appId,
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
 }
 
-export function updateApp(id, updates) {
-  const apps = loadApps()
-  const idx = apps.findIndex(a => a.id === id)
-  if (idx === -1) return apps
-  apps[idx] = { ...apps[idx], ...updates }
-  saveApps(apps)
-  return apps
+export async function reorderApps(appIds) {
+  const session = getSession()
+  if (!session) return { success: false, error: '未登录' }
+
+  const { data, error } = await supabase.rpc('admin_reorder_apps', {
+    admin_id: session.id,
+    app_ids: appIds,
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
 }
 
-export function deleteApp(id) {
-  let apps = loadApps()
-  apps = apps.filter(a => a.id !== id)
-  saveApps(apps)
-  return apps
+// ---- Users ----
+
+export async function getUsers() {
+  const session = getSession()
+  if (!session) return []
+
+  const { data, error } = await supabase.rpc('admin_get_users', {
+    admin_id: session.id,
+  })
+
+  if (error) return []
+  if (!data?.success) return []
+  return data.users || []
 }
 
-export function reorderApps(ids) {
-  const apps = loadApps()
-  const sorted = ids.map((id, i) => {
-    const app = apps.find(a => a.id === id)
-    if (app) return { ...app, order: i + 1 }
-    return null
-  }).filter(Boolean)
-  saveApps(sorted)
-  return sorted
+export async function createUser({ username, password, name, role }) {
+  const session = getSession()
+  if (!session) return { success: false }
+
+  const { data, error } = await supabase.rpc('admin_create_user', {
+    admin_id: session.id,
+    p_username: username,
+    p_password: password,
+    p_name: name,
+    p_role: role || 'user',
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
 }
 
-export function generateId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+export async function updateUser(id, { name, role }) {
+  const session = getSession()
+  if (!session) return { success: false }
+
+  const { data, error } = await supabase.rpc('admin_update_user', {
+    admin_id: session.id,
+    target_id: id,
+    p_name: name,
+    p_role: role,
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
+}
+
+export async function deleteUser(id) {
+  const session = getSession()
+  if (!session) return { success: false }
+
+  const { data, error } = await supabase.rpc('admin_delete_user', {
+    admin_id: session.id,
+    target_id: id,
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
+}
+
+export async function resetPassword(userId, newPassword) {
+  const session = getSession()
+  if (!session) return { success: false }
+
+  const { data, error } = await supabase.rpc('admin_reset_password', {
+    admin_id: session.id,
+    target_id: userId,
+    new_password: newPassword,
+  })
+
+  if (error) return { success: false, error: error.message }
+  return data
 }
