@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getSession, isAdmin, getUsers, addUser, updateUser, deleteUser, hashPassword } from '../../lib/auth'
+import { getSession, isAdmin } from '../../lib/auth'
 import GlassNav from '../../components/GlassNav'
 import AdminSidebar from '../../components/AdminSidebar'
 import GlassCard from '../../components/GlassCard'
 import GlassInput from '../../components/GlassInput'
 import GlassButton from '../../components/GlassButton'
 import Modal from '../../components/Modal'
-import { generateId } from '../../lib/data'
+import { getUsers, createUser, updateUser, deleteUser, resetPassword } from '../../lib/data'
 
 const emptyForm = { username: '', password: '', name: '', role: 'user' }
 
@@ -24,36 +24,40 @@ export default function AdminUsersPage() {
     if (!getSession()) { router.replace('/login'); return }
     if (!isAdmin()) { router.replace('/'); return }
     setAuthorized(true)
-    setUsers(getUsers())
+    loadUsers()
   }, [])
 
-  const refresh = () => setUsers([...getUsers()])
+  const loadUsers = async () => {
+    const result = await getUsers()
+    setUsers(result)
+  }
 
   const handleSave = async () => {
     if (!form.username.trim() || !form.name.trim()) return
     if (modal.mode === 'add' && !form.password.trim()) return
+
     if (modal.mode === 'add') {
-      addUser({
-        id: generateId(),
+      await createUser({
         username: form.username,
-        password: await hashPassword(form.password),
+        password: form.password,
         name: form.name,
         role: form.role,
-        createdAt: new Date().toISOString().split('T')[0],
       })
     } else {
-      const updates = {}
-      if (form.password) updates.password = await hashPassword(form.password)
-      updateUser(modal.user.id, { ...form, ...updates })
+      await updateUser(modal.user.id, { name: form.name, role: form.role })
+      if (form.password) {
+        await resetPassword(modal.user.id, form.password)
+      }
     }
-    refresh()
+
+    await loadUsers()
     setModal(null)
     setForm(emptyForm)
   }
 
-  const handleDelete = () => {
-    deleteUser(deleteTarget.id)
-    refresh()
+  const handleDelete = async () => {
+    await deleteUser(deleteTarget.id)
+    await loadUsers()
     setDeleteTarget(null)
   }
 
