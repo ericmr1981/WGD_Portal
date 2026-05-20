@@ -7,7 +7,7 @@ import GlassCard from '../../components/GlassCard'
 import GlassInput from '../../components/GlassInput'
 import GlassButton from '../../components/GlassButton'
 import Modal from '../../components/Modal'
-import { loadApps, addApp, updateApp, deleteApp, reorderApps, getConfig, generateId } from '../../lib/data'
+import { getApps, upsertApp, deleteApp, reorderApps, getConfig } from '../../lib/data'
 
 const emptyForm = { name: '', url: '', icon: '', category: '', description: '', order: 1 }
 
@@ -34,27 +34,32 @@ export default function AdminAppsPage() {
     if (!getSession()) { router.replace('/login'); return }
     if (!isAdmin()) { router.replace('/'); return }
     setAuthorized(true)
-    setApps(loadApps())
     setConfigState(getConfig())
+    loadApps()
   }, [])
 
-  const refresh = () => setApps([...loadApps()])
+  const loadApps = async () => {
+    const result = await getApps()
+    setApps(result)
+  }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim() || !form.url.trim()) return
+
     if (modal.mode === 'add') {
-      addApp({ id: generateId(), ...form, order: apps.length + 1 })
+      await upsertApp({ ...form, order: apps.length + 1 })
     } else {
-      updateApp(modal.app.id, form)
+      await upsertApp({ ...form, id: modal.app.id })
     }
-    refresh()
+
+    await loadApps()
     setModal(null)
     setForm(emptyForm)
   }
 
-  const handleDelete = () => {
-    deleteApp(deleteTarget.id)
-    refresh()
+  const handleDelete = async () => {
+    await deleteApp(deleteTarget.id)
+    await loadApps()
     setDeleteTarget(null)
   }
 
@@ -67,15 +72,15 @@ export default function AdminAppsPage() {
 
   const handleDragOver = (e) => e.preventDefault()
 
-  const handleDrop = (targetId) => {
+  const handleDrop = async (targetId) => {
     if (!dragId || dragId === targetId) return
     const ids = apps.map(a => a.id)
     const fromIdx = ids.indexOf(dragId)
     const toIdx = ids.indexOf(targetId)
     ids.splice(fromIdx, 1)
     ids.splice(toIdx, 0, dragId)
-    reorderApps(ids)
-    refresh()
+    await reorderApps(ids)
+    await loadApps()
     setDragId(null)
   }
 
