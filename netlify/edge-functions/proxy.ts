@@ -1,5 +1,21 @@
-import { createClient } from 'npm:@supabase/supabase-js@2'
 import type { Context } from 'netlify:edge'
+
+const SUPABASE_URL = 'https://ltwqcvqfwwvjrcwnwvvn.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0d3FjdnFmd3d2anJjd253dnZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5Mzg2NTEsImV4cCI6MjA5MzUxNDY1MX0.5DfNAcXFBYT6eU6PArTocqFqWtNyXcKeQDlpZS5RN0E'
+
+async function supabaseRpc(functionName: string, params: Record<string, unknown>): Promise<any> {
+  const resp = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${functionName}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify(params),
+  })
+  if (!resp.ok) return null
+  return resp.json()
+}
 
 export default async (request: Request, context: Context) => {
   const url = new URL(request.url)
@@ -16,20 +32,14 @@ export default async (request: Request, context: Context) => {
 
   let session
   try { session = JSON.parse(atob(sessionCookie)) } catch { return redirectToLogin(url) }
-  if (!session.id) return redirectToLogin(url)
+  if (!session?.id) return redirectToLogin(url)
 
-  // Init Supabase
-  const supabase = createClient(
-    context.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    context.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  )
-
-  // Verify user session
-  const { data: userData } = await supabase.rpc('verify_session', { p_user_id: session.id })
+  // Verify user session exists in DB
+  const userData = await supabaseRpc('verify_session', { p_user_id: session.id })
   if (!userData?.valid) return redirectToLogin(url)
 
   // Get app URL
-  const { data: appData } = await supabase.rpc('get_app_url', { p_app_id: appId })
+  const appData = await supabaseRpc('get_app_url', { p_app_id: appId })
   if (!appData?.url) return new Response('App not found', { status: 404 })
 
   const targetUrl = appData.url.replace(/\/$/, '')
@@ -37,7 +47,7 @@ export default async (request: Request, context: Context) => {
   // ---- Build a fresh SSO token on initial page load ----
   let ssoToken = url.searchParams.get('sso_token')
   if (!ssoToken && proxyPath === '/') {
-    const { data: tokenData } = await supabase.rpc('create_sso_token', {
+    const tokenData = await supabaseRpc('create_sso_token', {
       p_user_id: session.id,
       p_user_name: session.name || '',
       p_user_role: session.role || 'user',
@@ -69,27 +79,25 @@ export default async (request: Request, context: Context) => {
 
     if (contentType.includes('html') || contentType.includes('javascript') || contentType.includes('text/css')) {
       if (ssoToken) {
-        // Insert sso_token into _stcore URLs (append or inject query param)
         rewritten = rewritten
           .replace(
-            new RegExp(`(/${proxyBase}/_stcore/[^"\'\\s]*)`, 'g'),
+            new RegExp(`(/${proxyBase}/_stcore/[^"'\\s]*)`, 'g'),
             (match) => match.includes('?') ? `${match}&sso_token=${ssoToken}` : `${match}?sso_token=${ssoToken}`
           )
           .replace(
-            new RegExp(`(/_stcore/[^"\'\\s]*)`, 'g'),
+            new RegExp(`(/_stcore/[^"'\\s]*)`, 'g'),
             (match) => {
               const proxied = proxyBase + match
               return proxied.includes('?') ? `${proxied}&sso_token=${ssoToken}` : `${proxied}?sso_token=${ssoToken}`
             }
           )
       } else {
-        // Still need to rewrite _stcore paths so they go through proxy
         rewritten = rewritten
-          .replace(new RegExp(`(/_stcore/[^"\'\\s]*)`, 'g'), (m) => proxyBase + m)
+          .replace(new RegExp(`(/_stcore/[^"'\\s]*)`, 'g'), (m) => proxyBase + m)
       }
     }
 
-    // Also rewrite root-relative general URLs for HTML
+    // Rewrite root-relative general URLs for HTML
     if (contentType.includes('html') && !contentType.includes('javascript')) {
       rewritten = rewritten
         .replace(/href="\/(?!\/)/g, `href="${proxyBase}/`)
