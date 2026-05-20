@@ -5,7 +5,7 @@ const COOKIE_KEY = 'wgd_session'
 
 function setSessionCookie(session) {
   const encoded = btoa(JSON.stringify(session))
-  document.cookie = `${COOKIE_KEY}=${encoded}; path=/; SameSite=Lax; max-age=86400`
+  document.cookie = `${COOKIE_KEY}=${encoded}; path=/; SameSite=Lax; max-age=604800`
 }
 
 function clearSessionCookie() {
@@ -30,7 +30,7 @@ export async function login(username, password) {
       name: data.user.name,
       role: data.user.role,
     }
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
     setSessionCookie(session)
     return session
   }
@@ -39,6 +39,7 @@ export async function login(username, password) {
 }
 
 export function logout() {
+  localStorage.removeItem(STORAGE_KEY)
   sessionStorage.removeItem(STORAGE_KEY)
   clearSessionCookie()
 }
@@ -46,8 +47,16 @@ export function logout() {
 export function getSession() {
   if (typeof window === 'undefined') return null
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : null
+    const raw = localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const session = JSON.parse(raw)
+      // Sync to localStorage if found in sessionStorage
+      if (sessionStorage.getItem(STORAGE_KEY) && !localStorage.getItem(STORAGE_KEY)) {
+        localStorage.setItem(STORAGE_KEY, raw)
+      }
+      return session
+    }
+    return null
   } catch {
     return null
   }
