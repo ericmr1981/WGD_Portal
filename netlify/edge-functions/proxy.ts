@@ -30,7 +30,7 @@ export default async (request: Request, context: Context) => {
   if (!sessionCookie) return redirectToLogin(url)
 
   let session
-  try { session = JSON.parse(atob(sessionCookie)) } catch { return redirectToLogin(url) }
+  try { session = JSON.parse(sessionCookie) } catch { return redirectToLogin(url) }
   if (!session?.id) return redirectToLogin(url)
 
   // Verify user session exists in DB

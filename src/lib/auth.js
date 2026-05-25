@@ -4,7 +4,7 @@ const STORAGE_KEY = 'wgd_session'
 const COOKIE_KEY = 'wgd_session'
 
 function setSessionCookie(session) {
-  const encoded = btoa(JSON.stringify(session))
+  const encoded = encodeURIComponent(JSON.stringify(session))
   document.cookie = `${COOKIE_KEY}=${encoded}; path=/; SameSite=Lax; max-age=604800`
 }
 
