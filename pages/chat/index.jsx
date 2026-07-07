@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import ChatShell from '../components/chat/ChatShell'
+import ChatShell from '../../src/components/chat/ChatShell'
 
 export default function ChatPage() {
   const [ready, setReady] = useState(false)

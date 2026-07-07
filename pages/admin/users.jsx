@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getSession, isAdmin } from '../../lib/auth'
-import GlassNav from '../../components/GlassNav'
-import AdminSidebar from '../../components/AdminSidebar'
-import GlassCard from '../../components/GlassCard'
-import GlassInput from '../../components/GlassInput'
-import GlassButton from '../../components/GlassButton'
-import Modal from '../../components/Modal'
-import { getUsers, createUser, updateUser, deleteUser, resetPassword } from '../../lib/data'
+import { getSession, isAdmin } from '../../src/lib/auth'
+import GlassNav from '../../src/components/GlassNav'
+import AdminSidebar from '../../src/components/AdminSidebar'
+import GlassCard from '../../src/components/GlassCard'
+import GlassInput from '../../src/components/GlassInput'
+import GlassButton from '../../src/components/GlassButton'
+import Modal from '../../src/components/Modal'
+import { getUsers, createUser, updateUser, deleteUser, resetPassword } from '../../src/lib/data'
 
 const emptyForm = { username: '', password: '', name: '', role: 'user' }
 

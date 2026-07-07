@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getSession, isAdmin } from '../../lib/auth'
-import GlassNav from '../../components/GlassNav'
-import AdminSidebar from '../../components/AdminSidebar'
-import GlassCard from '../../components/GlassCard'
-import { getApps, getConfig, getUsers } from '../../lib/data'
+import { getSession, isAdmin } from '../../src/lib/auth'
+import GlassNav from '../../src/components/GlassNav'
+import AdminSidebar from '../../src/components/AdminSidebar'
+import GlassCard from '../../src/components/GlassCard'
+import { getApps, getConfig, getUsers } from '../../src/lib/data'
 
 export default function AdminPage() {
   const router = useRouter()

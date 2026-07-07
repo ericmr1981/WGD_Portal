@@ -1,12 +1,13 @@
 [build]
   command = "npm run build"
-  publish = "out"
+  publish = ".next"
+
+[functions]
+  directory = "netlify/functions"
 
 [[edge_functions]]
   function = "proxy"
   path = "/go/*"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

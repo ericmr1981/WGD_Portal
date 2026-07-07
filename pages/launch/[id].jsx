@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
-import { getSession } from '../../lib/auth'
-import { getApps } from '../../lib/data'
+import { getSession } from '../../src/lib/auth'
+import { getApps } from '../../src/lib/data'
 
 export default function LaunchPage() {
   const router = useRouter()

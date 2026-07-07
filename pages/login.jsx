@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { login } from '../lib/auth'
+import { login } from '../src/lib/auth'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
