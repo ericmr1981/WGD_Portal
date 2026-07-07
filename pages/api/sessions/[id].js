@@ -1,43 +1,32 @@
 import { getCurrentUser } from '../../../src/lib/auth.js'
-import { supabase } from '../../../src/lib/supabase.js'
+import { signAgentToken } from '../../../src/lib/agent-token.js'
 
-async function ownSession(userId, id) {
-  const { data } = await supabase
-    .from('chat_sessions')
-    .select('id')
-    .eq('id', id)
-    .eq('user_id', userId)
-    .single()
-  return Boolean(data)
-}
+const AGENT_BASE = process.env.AGENT_HTTP_URL || 'http://127.0.0.1:4101'
 
 export default async function handler(req, res) {
   const user = getCurrentUser(req)
   if (!user) return res.status(401).json({ error: 'unauthorized' })
-  const id = req.query.id
-  if (!id) return res.status(400).json({ error: 'missing_id' })
+  const token = signAgentToken(user.id).token
 
-  const owns = await ownSession(user.id, id)
-  if (!owns) return res.status(403).json({ error: 'forbidden' })
-
-  if (req.method === 'PATCH') {
-    const title = typeof req.body?.title === 'string' ? req.body.title.trim() : null
-    if (!title) return res.status(400).json({ error: 'title_required' })
-    const { data, error } = await supabase
-      .from('chat_sessions')
-      .update({ title, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select('id,title,updated_at')
-      .single()
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(200).json(data)
+  const init = {
+    method: req.method,
+    headers: {
+      authorization: `Bearer ${token}`,
+      'content-type': 'application/json',
+    },
+  }
+  if (['POST', 'PATCH', 'PUT'].includes(req.method)) {
+    init.body = JSON.stringify(req.body ?? {})
   }
 
-  if (req.method === 'DELETE') {
-    const { error } = await supabase.from('chat_sessions').delete().eq('id', id)
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(204).end()
-  }
+  const agentPath = req.url.split('?')[0]
+    .replace(/^\/api\/sessions\/\[id\]/, '/api/conversations/')
+    .replace('/api/conversations/[id]', '/api/conversations/' + (req.query.id || ''))
+    .replace(/\/\[id\]/, '/' + (req.query.id || ''))
 
-  return res.status(405).json({ error: 'method_not_allowed' })
+  const upstream = await fetch(`${AGENT_BASE}${agentPath}`, init)
+  const text = await upstream.text()
+  res.status(upstream.status)
+    .setHeader('content-type', upstream.headers.get('content-type') || 'application/json')
+    .send(text)
 }

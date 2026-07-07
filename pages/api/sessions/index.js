@@ -1,30 +1,40 @@
 import { getCurrentUser } from '../../../src/lib/auth.js'
-import { supabase } from '../../../src/lib/supabase.js'
+import { signAgentToken } from '../../../src/lib/agent-token.js'
 
-export default async function handler(req, res) {
+const AGENT_BASE = process.env.AGENT_HTTP_URL || 'http://127.0.0.1:4101'
+
+async function getBearer(req) {
   const user = getCurrentUser(req)
-  if (!user) return res.status(401).json({ error: 'unauthorized' })
-
-  if (req.method === 'GET') {
-    const { data, error } = await supabase
-      .from('chat_sessions')
-      .select('id,brand,title,updated_at')
-      .eq('user_id', user.id)
-      .order('updated_at', { ascending: false })
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(200).json(data ?? [])
-  }
-
-  if (req.method === 'POST') {
-    const brand = typeof req.body?.brand === 'string' ? req.body.brand : null
-    const { data, error } = await supabase
-      .from('chat_sessions')
-      .insert({ user_id: user.id, brand })
-      .select('id,brand,title,created_at')
-      .single()
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(201).json(data)
-  }
-
-  return res.status(405).json({ error: 'method_not_allowed' })
+  if (!user) return null
+  return signAgentToken(user.id).token
 }
+
+function agentPath(req) {
+  // /api/sessions        → /api/conversations
+  // /api/sessions/abc    → /api/conversations/abc
+  return req.url.split('?')[0].replace(/^\/api\/sessions/, '/api/conversations')
+}
+
+async function proxy(req, res) {
+  const token = await getBearer(req)
+  if (!token) return res.status(401).json({ error: 'unauthorized' })
+
+  const init = {
+    method: req.method,
+    headers: {
+      authorization: `Bearer ${token}`,
+      'content-type': 'application/json',
+    },
+  }
+  if (['POST', 'PATCH', 'PUT'].includes(req.method)) {
+    init.body = JSON.stringify(req.body ?? {})
+  }
+
+  const upstream = await fetch(`${AGENT_BASE}${agentPath(req)}`, init)
+  const text = await upstream.text()
+  res.status(upstream.status)
+    .setHeader('content-type', upstream.headers.get('content-type') || 'application/json')
+    .send(text)
+}
+
+export default proxy

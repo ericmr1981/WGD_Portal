@@ -5,8 +5,15 @@ import Composer from './Composer'
 import EmptyState from './EmptyState'
 import useAgentSocket from '../../lib/useAgentSocket'
 
-let tempId = 0
-const nextTempId = () => `t-${++tempId}`
+// Normalize agent session → sidebar shape
+function normalizeSession(s) {
+  return {
+    id: s.conversationId ?? s.id,
+    brand: s.brand ?? null,
+    title: s.title ?? '新会话',
+    updated_at: s.lastActiveAt ?? s.updated_at,
+  }
+}
 
 export default function ChatShell({ currentUser, isAdmin }) {
   const [sessions, setSessions] = useState([])
@@ -16,28 +23,39 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const [streaming, setStreaming] = useState(false)
   const [failed, setFailed] = useState(false)
   const [connState, setConnState] = useState('connecting')
-  const pendingRef = useRef(null)
 
   // load sessions
-  useEffect(() => {
-    fetch('/api/sessions', { credentials: 'include' })
-      .then((r) => r.json())
-      .then((d) => {
-        if (Array.isArray(d)) {
-          setSessions(d)
-          if (d[0]) setActiveId(d[0].id)
-        }
-      })
-      .catch(() => {})
-  }, [])
+  const loadSessions = async () => {
+    try {
+      const r = await fetch('/api/sessions', { credentials: 'include' })
+      if (!r.ok) return
+      const d = await r.json()
+      if (Array.isArray(d)) {
+        setSessions(d.map(normalizeSession))
+      }
+    } catch {}
+  }
+  useEffect(() => { loadSessions() }, [])
 
   // load messages when active changes
   useEffect(() => {
     if (!activeId) { setMessages([]); return }
-    fetch(`/api/sessions/${activeId}/messages`, { credentials: 'include' })
-      .then((r) => r.json())
-      .then((d) => setMessages(Array.isArray(d) ? d : []))
-      .catch(() => setMessages([]))
+    (async () => {
+      try {
+        const r = await fetch(`/api/sessions/${activeId}/messages`, { credentials: 'include' })
+        if (!r.ok) { setMessages([]); return }
+        const d = await r.json()
+        setMessages(Array.isArray(d) ? d.map((m) => ({
+          id: m.messageId ?? m.id,
+          role: m.role,
+          content: m.content,
+          status: m.status,
+          createdAt: m.createdAt ?? m.created_at,
+        })) : [])
+      } catch {
+        setMessages([])
+      }
+    })()
   }, [activeId])
 
   // socket
@@ -59,82 +77,54 @@ export default function ChatShell({ currentUser, isAdmin }) {
   })
 
   const sendMessage = ({ content, brand }) => {
-    if (!activeId) {
-      fetch('/api/sessions', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ brand }),
-      })
-        .then((r) => r.json())
-        .then((s) => {
-          if (s && s.id) {
-            setSessions((arr) => [s, ...arr])
-            setActiveId(s.id)
-            pendingRef.current = { content, brand }
-          }
-        })
-      return
-    }
-    setMessages((m) => [...m, { id: nextTempId(), role: 'user', content }])
+    if (!activeId) return  // requires explicit "新建" before sending
+    setMessages((m) => [...m, { id: `tmp-${Date.now()}`, role: 'user', content }])
     setStreaming(true)
     setFailed(false)
     setStreamingBuffer('')
     send({ conversationId: activeId, content, brand })
   }
 
-  // pending: triggered when activeId becomes available after auto-create
-  useEffect(() => {
-    if (activeId && pendingRef.current) {
-      const { content, brand } = pendingRef.current
-      pendingRef.current = null
-      setMessages((m) => [...m, { id: nextTempId(), role: 'user', content }])
-      setStreaming(true)
-      setStreamingBuffer('')
-      send({ conversationId: activeId, content, brand })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeId])
-
-  const onCreate = () =>
-    fetch('/api/sessions', {
+  const onCreate = async () => {
+    const r = await fetch('/api/sessions', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
       credentials: 'include',
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({}),
     })
-      .then((r) => r.json())
-      .then((s) => {
-        if (s && s.id) {
-          setSessions((arr) => [s, ...arr])
-          setActiveId(s.id)
-        }
-      })
+    if (!r.ok) return
+    const s = await r.json()
+    const norm = normalizeSession(s)
+    setSessions((arr) => [norm, ...arr])
+    setActiveId(norm.id)
+  }
 
-  const onRename = (id, title) =>
-    fetch(`/api/sessions/${id}`, {
+  const onRename = async (id, title) => {
+    const r = await fetch(`/api/sessions/${id}`, {
       method: 'PATCH',
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ title }),
-    }).then(() => setSessions((arr) => arr.map((s) => s.id === id ? { ...s, title } : s)))
-
-  const onDelete = (id) =>
-    fetch(`/api/sessions/${id}`, { method: 'DELETE', credentials: 'include' })
-      .then(() => {
-        setSessions((arr) => {
-          const next = arr.filter((s) => s.id !== id)
-          if (activeId === id) {
-            const fallback = next[0]?.id ?? null
-            setActiveId(fallback)
-          }
-          return next
-        })
-      })
-
-  const onOpenAdmin = () => {
-    window.location.href = '/admin'
+    })
+    if (!r.ok) return
+    const d = await r.json().catch(() => null)
+    const newTitle = d?.title ?? title
+    setSessions((arr) => arr.map((s) => s.id === id ? { ...s, title: newTitle } : s))
   }
+
+  const onDelete = async (id) => {
+    const r = await fetch(`/api/sessions/${id}`, { method: 'DELETE', credentials: 'include' })
+    if (!r.ok && r.status !== 204) return
+    setSessions((arr) => {
+      const next = arr.filter((s) => s.id !== id)
+      if (activeId === id) {
+        setActiveId(next[0]?.id ?? null)
+      }
+      return next
+    })
+  }
+
+  const onOpenAdmin = () => { window.location.href = '/admin' }
 
   return (
     <div className="chat-root min-h-screen flex">
@@ -149,16 +139,21 @@ export default function ChatShell({ currentUser, isAdmin }) {
         onOpenAdmin={onOpenAdmin}
       />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="border-b border-line px-6 py-3 text-sm text-muted bg-paper">
-          {connState === 'ok' ? '已连接' :
-           connState === 'reconnecting' ? '重连中…' :
-           connState === 'failed' ? '连接失败' : '连接中…'}
+        <header className="border-b border-line px-6 py-3 text-sm text-muted bg-paper flex items-center justify-between">
+          <span>
+            {connState === 'ok' ? '已连接' :
+             connState === 'reconnecting' ? '重连中…' :
+             connState === 'failed' ? '连接失败' : '连接中…'}
+          </span>
+          {!activeId && (
+            <span className="text-xs text-claude">点 sidebar「+ 新建」开始</span>
+          )}
         </header>
         {messages.length === 0 && !streaming
           ? <EmptyState onPick={(c) => sendMessage({ content: c, brand: null })} />
           : <MessageList messages={messages} streamingBuffer={streamingBuffer} failed={failed} />
         }
-        <Composer onSend={sendMessage} disabled={streaming} />
+        <Composer onSend={sendMessage} disabled={streaming || !activeId} />
       </div>
     </div>
   )
