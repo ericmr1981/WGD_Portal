@@ -1,15 +1,16 @@
 import { useEffect, useRef } from 'react'
 import MarkdownView from './MarkdownView'
+import StepList from './StepList'
 
-export default function MessageList({ messages, streamingBuffer, failed }) {
+export default function MessageList({ messages, streamingSteps = [], streaming = false, failed = false }) {
   const ref = useRef(null)
 
   useEffect(() => {
     const el = ref.current
     if (el) el.scrollTop = el.scrollHeight
-  }, [messages.length, streamingBuffer])
+  }, [messages.length, streamingSteps.length])
 
-  const showStreaming = streamingBuffer && messages[messages.length - 1]?.role !== 'user'
+  const showStreaming = streaming
 
   return (
     <div ref={ref} className="flex-1 overflow-y-auto px-6 py-8 bg-paper">
@@ -28,6 +29,14 @@ export default function MessageList({ messages, streamingBuffer, failed }) {
                   <span className="whitespace-pre-wrap">{m.content}</span>
                 ) : (
                   <>
+                    {m.steps && m.steps.length > 0 && (
+                      <details className="mb-2">
+                        <summary className="text-xs text-muted cursor-pointer hover:text-ink">
+                          查看步骤 ({m.steps.length})
+                        </summary>
+                        <StepList steps={m.steps} complete={true} />
+                      </details>
+                    )}
                     <MarkdownView>{m.content}</MarkdownView>
                     {isLast && failed && (
                       <p className="mt-2 text-xs text-claude">⚠ 回复中断</p>
@@ -40,9 +49,8 @@ export default function MessageList({ messages, streamingBuffer, failed }) {
         })}
         {showStreaming && (
           <div className="flex justify-start">
-            <div className="text-ink max-w-[100%]">
-              <MarkdownView>{streamingBuffer}</MarkdownView>
-              <span className="ml-1 inline-block animate-pulse text-claude">▍</span>
+            <div className="text-ink max-w-[100%] w-full">
+              <StepList steps={streamingSteps} complete={false} />
             </div>
           </div>
         )}

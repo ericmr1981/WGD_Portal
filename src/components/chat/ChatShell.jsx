@@ -3,6 +3,7 @@ import Sidebar from './Sidebar'
 import MessageList from './MessageList'
 import Composer from './Composer'
 import EmptyState from './EmptyState'
+import StepList from './StepList'
 import useAgentSocket from '../../lib/useAgentSocket'
 
 // Normalize agent session → sidebar shape
@@ -19,7 +20,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const [sessions, setSessions] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [messages, setMessages] = useState([])
-  const [streamingBuffer, setStreamingBuffer] = useState('')
+  const [streamingSteps, setStreamingSteps] = useState([])
   const [streaming, setStreaming] = useState(false)
   const [failed, setFailed] = useState(false)
   const [connState, setConnState] = useState('connecting')
@@ -60,13 +61,24 @@ export default function ChatShell({ currentUser, isAdmin }) {
 
   // socket
   const { send } = useAgentSocket({
-    onUpdate: (p) => setStreamingBuffer((b) => b + (p?.delta ?? '')),
+    onUpdate: (p) => {
+      if (p?.kind === 'step' && p.step) {
+        setStreamingSteps((arr) => [...arr, p.step])
+      }
+    },
     onDone: (p) => {
-      setStreamingBuffer((b) => {
-        const final = b + (p?.content ?? '')
-        setMessages((m) => [...m, { role: 'assistant', content: final, status: 'done' }])
-        return ''
-      })
+      const finalSteps = p?.steps ?? []
+      const finalContent = p?.content ?? ''
+      setMessages((m) => [
+        ...m,
+        {
+          role: 'assistant',
+          content: finalContent,
+          status: 'done',
+          steps: finalSteps,
+        },
+      ])
+      setStreamingSteps([])
       setStreaming(false)
     },
     onError: () => {
@@ -77,11 +89,11 @@ export default function ChatShell({ currentUser, isAdmin }) {
   })
 
   const sendMessage = ({ content, brand }) => {
-    if (!activeId) return  // requires explicit "新建" before sending
+    if (!activeId) return
     setMessages((m) => [...m, { id: `tmp-${Date.now()}`, role: 'user', content }])
     setStreaming(true)
     setFailed(false)
-    setStreamingBuffer('')
+    setStreamingSteps([])
     send({ conversationId: activeId, content, brand })
   }
 
@@ -151,7 +163,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
         </header>
         {messages.length === 0 && !streaming
           ? <EmptyState onPick={(c) => sendMessage({ content: c, brand: null })} />
-          : <MessageList messages={messages} streamingBuffer={streamingBuffer} failed={failed} />
+          : <MessageList messages={messages} streamingSteps={streamingSteps} streaming={streaming} failed={failed} />
         }
         <Composer onSend={sendMessage} disabled={streaming || !activeId} />
       </div>
