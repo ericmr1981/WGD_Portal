@@ -27,10 +27,17 @@ export default function Composer({ onSend, disabled }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
+              // IME (中文拼音/日文/韩文) compose end 也在 keydown 触发 Enter,
+              // 需用 keyCode 229 判定 composing 状态
+              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
                 e.preventDefault()
                 submit()
               }
+            }}
+            onCompositionStart={() => {}}
+            onCompositionEnd={(e) => {
+              // IME 拼写刚结束,值已同步进 text state,正常走 onChange 路径。
+              // 不在此处发,避免回车被吞。
             }}
             placeholder="聊点什么…"
             rows={1}
