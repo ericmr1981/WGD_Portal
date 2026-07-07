@@ -139,7 +139,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const onOpenAdmin = () => { window.location.href = '/admin' }
 
   return (
-    <div className="chat-root min-h-screen flex">
+    <div className="chat-root h-screen overflow-hidden flex bg-paper">
       <Sidebar
         sessions={sessions}
         activeId={activeId}
@@ -150,8 +150,8 @@ export default function ChatShell({ currentUser, isAdmin }) {
         isAdmin={isAdmin}
         onOpenAdmin={onOpenAdmin}
       />
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="border-b border-line px-6 py-3 text-sm text-muted bg-paper flex items-center justify-between">
+      <div className="flex-1 min-h-0 h-full flex flex-col">
+        <header className="shrink-0 border-b border-line px-6 py-3 text-sm text-muted bg-paper flex items-center justify-between">
           <span>
             {connState === 'ok' ? '已连接' :
              connState === 'reconnecting' ? '重连中…' :

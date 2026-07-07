@@ -22,7 +22,7 @@ export default function Sidebar({
   }
 
   return (
-    <aside className="w-[280px] h-screen bg-paper border-r border-line flex flex-col shrink-0">
+    <aside className="w-[280px] h-screen min-h-0 bg-paper border-r border-line flex flex-col shrink-0">
       <div className="p-3">
         <button
           onClick={onCreate}
@@ -32,7 +32,7 @@ export default function Sidebar({
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-2 space-y-1">
+      <nav className="flex-1 min-h-0 overflow-y-auto px-2 space-y-1">
         {sessions.length === 0 ? (
           <p className="text-muted text-sm px-3 py-6">还没有会话</p>
         ) : (

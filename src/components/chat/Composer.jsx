@@ -17,7 +17,7 @@ export default function Composer({ onSend, disabled }) {
   }
 
   return (
-    <div className="border-t border-line bg-paper px-6 py-4">
+    <div className="shrink-0 border-t border-line bg-paper px-6 py-4">
       <div className="max-w-[720px] mx-auto">
         {oversize && (
           <p className="text-claude text-xs mb-2">内容超过 32000 字符,已截断</p>

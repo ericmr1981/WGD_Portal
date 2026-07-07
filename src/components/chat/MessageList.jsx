@@ -13,7 +13,7 @@ export default function MessageList({ messages, streamingSteps = [], streaming =
   const showStreaming = streaming
 
   return (
-    <div ref={ref} className="flex-1 overflow-y-auto px-6 py-8 bg-paper">
+    <div ref={ref} className="flex-1 min-h-0 overflow-y-auto px-6 py-8 bg-paper">
       <div className="max-w-[720px] mx-auto space-y-6">
         {messages.map((m, i) => {
           const isUser = m.role === 'user'
