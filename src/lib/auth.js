@@ -66,3 +66,26 @@ export function isAdmin() {
   const session = getSession()
   return session?.role === 'admin'
 }
+
+/**
+ * 在 API route 中读取当前用户。
+ * 解析 wgd_session cookie(JSON string) → 返回 {id, username, role}。
+ * 不抛错;非法 cookie 返回 null。
+ */
+export function getCurrentUser(req) {
+  const cookieHeader =
+    (req.headers && (req.headers.cookie || req.headers.get?.('cookie'))) || ''
+  const match = cookieHeader.match(/(?:^|;\s*)wgd_session=([^;]+)/)
+  if (!match) return null
+  try {
+    const session = JSON.parse(decodeURIComponent(match[1]))
+    if (!session?.id) return null
+    return {
+      id: session.id,
+      username: session.username ?? null,
+      role: session.role ?? 'user',
+    }
+  } catch {
+    return null
+  }
+}
