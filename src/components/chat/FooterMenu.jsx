@@ -54,11 +54,6 @@ export default function FooterMenu({ currentUser, isAdmin, onOpenAdmin, onLogout
             <div className="text-[10px] uppercase text-muted px-2 py-1">应用</div>
             <a
               href="/admin"
-              onClick={(e) => {
-                e.preventDefault()
-                onOpenAdmin?.()
-                setOpen(false)
-              }}
               className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-hover cursor-pointer"
             >
               <span className="w-7 h-7 rounded-md bg-ink/5 flex items-center justify-center text-base">📊</span>
@@ -82,18 +77,13 @@ export default function FooterMenu({ currentUser, isAdmin, onOpenAdmin, onLogout
           {/* Settings */}
           <div className="p-1.5 border-t border-line">
             <a
-              href="/admin/config"
-              onClick={(e) => {
-                e.preventDefault()
-                onOpenAdmin?.()
-                setOpen(false)
-              }}
+              href="/admin/apps"
               className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-hover"
             >
               <span className="w-7 h-7 rounded-md bg-ink/5 flex items-center justify-center text-base">⚙️</span>
               <div className="flex-1 min-w-0">
                 <div className="text-ink">配置</div>
-                <div className="text-[10px] text-muted truncate">Agent 设置 / Skills / Tools</div>
+                <div className="text-[10px] text-muted truncate">应用与用户管理</div>
               </div>
             </a>
           </div>

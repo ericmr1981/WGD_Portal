@@ -32,6 +32,8 @@ export default function LoginPage() {
         name: data.user.username,
         role: data.user.role,
       }
+      // 写 localStorage (供 admin 页 getSession 使用) + cookie (供 middleware + API getCurrentUser 使用)
+      localStorage.setItem('wgd_session', JSON.stringify(session))
       const encoded = encodeURIComponent(JSON.stringify(session))
       document.cookie = `wgd_session=${encoded}; path=/; SameSite=Lax; max-age=604800`
       const dest = typeof router.query.from === 'string' ? router.query.from : '/chat'
