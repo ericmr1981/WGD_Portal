@@ -1,22 +1,28 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { getSession, isAdmin } from '../../src/lib/auth'
-import GlassNav from '../../src/components/GlassNav'
-import AdminSidebar from '../../src/components/AdminSidebar'
-import GlassCard from '../../src/components/GlassCard'
-import GlassInput from '../../src/components/GlassInput'
-import GlassButton from '../../src/components/GlassButton'
-import Modal from '../../src/components/Modal'
+import AdminTopBar from '../../src/components/admin/AdminTopBar'
+import AdminSideNav from '../../src/components/admin/AdminSideNav'
+import AdminCard from '../../src/components/admin/AdminCard'
+import AdminInput from '../../src/components/admin/AdminInput'
+import AdminButton from '../../src/components/admin/AdminButton'
+import AdminModal from '../../src/components/admin/AdminModal'
 import { getApps, upsertApp, deleteApp, reorderApps, getConfig } from '../../src/lib/data'
 
 const emptyForm = { name: '', url: '', icon: '', category: '', description: '', order: 1 }
 
 const iconOptions = [
-  { value: 'github', label: 'GitHub', color: 'from-blue-500 to-cyan-400' },
-  { value: 'jira', label: 'Jira', color: 'from-neon-purple to-purple-400' },
-  { value: 'slack', label: 'Slack', color: 'from-pink-500 to-rose-400' },
-  { value: 'datadog', label: 'Datadog', color: 'from-amber-500 to-red-400' },
-  { value: 'custom', label: '自定义', color: 'from-neon-cyan to-neon-purple' },
+  { value: 'github', label: 'GitHub', emoji: '🐙' },
+  { value: 'jira', label: 'Jira', emoji: '📋' },
+  { value: 'slack', label: 'Slack', emoji: '💬' },
+  { value: 'datadog', label: 'Datadog', emoji: '📈' },
+  { value: 'custom', label: '自定义', emoji: '🔗' },
+]
+
+const sidebarItems = [
+  { id: 'overview', label: '概览', icon: '📊' },
+  { id: 'users', label: '用户管理', icon: '👥' },
+  { id: 'apps', label: '应用管理', icon: '📦' },
 ]
 
 export default function AdminAppsPage() {
@@ -28,7 +34,6 @@ export default function AdminAppsPage() {
   const [form, setForm] = useState(emptyForm)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [dragId, setDragId] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (!getSession()) { router.replace('/login'); return }
@@ -69,7 +74,6 @@ export default function AdminAppsPage() {
   }
 
   const handleDragStart = (id) => setDragId(id)
-
   const handleDragOver = (e) => e.preventDefault()
 
   const handleDrop = async (targetId) => {
@@ -84,28 +88,38 @@ export default function AdminAppsPage() {
     setDragId(null)
   }
 
+  const navigate = (id) => {
+    if (id === 'overview') router.push('/admin')
+    else if (id === 'users') router.push('/admin/users')
+  }
+
   if (!authorized) return null
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <GlassNav />
-      <div className="flex flex-1 overflow-x-hidden">
-        <button onClick={() => setSidebarOpen(true)}
-                className="sm:hidden fixed left-3 bottom-20 z-30 glass rounded-full w-12 h-12 flex items-center justify-center text-lg shadow-lg">
-          📋
-        </button>
-        <AdminSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-6 overflow-x-hidden max-w-full">
+    <div className="min-h-screen bg-paper flex flex-col">
+      <AdminTopBar title="应用管理" />
+      <div className="flex flex-1">
+        <AdminSideNav
+          active="apps"
+          items={sidebarItems}
+          onNavigate={navigate}
+        />
+        <main className="flex-1 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-white">应用管理</h1>
-            <GlassButton onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }) }}>
+            <h2 className="text-xl font-semibold text-ink">应用列表</h2>
+            <AdminButton onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }) }}>
               + 添加应用
-            </GlassButton>
+            </AdminButton>
           </div>
 
-          <p className="text-gray-500 text-xs mb-4">拖拽卡片可调整排序</p>
+          <p className="text-muted text-xs mb-4">拖拽卡片可调整排序</p>
 
           <div className="space-y-3">
+            {apps.length === 0 && (
+              <AdminCard>
+                <p className="text-muted text-sm text-center py-8">暂无应用</p>
+              </AdminCard>
+            )}
             {apps.map((app) => (
               <div
                 key={app.id}
@@ -115,62 +129,60 @@ export default function AdminAppsPage() {
                 onDrop={() => handleDrop(app.id)}
                 className={`transition-opacity ${dragId === app.id ? 'opacity-50' : ''}`}
               >
-                <GlassCard className="flex items-center justify-between p-4 cursor-grab active:cursor-grabbing">
+                <AdminCard className="flex items-center justify-between p-4 cursor-grab active:cursor-grabbing">
                   <div className="flex items-center gap-4">
-                    <span className="text-gray-600 text-sm cursor-move">⠿</span>
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${
-                      iconOptions.find(o => o.value === app.icon)?.color || iconOptions[4].color
-                    } flex items-center justify-center text-white font-medium text-sm`}>
-                      {app.name?.charAt(0) || '?'}
+                    <span className="text-muted text-sm cursor-move">⠿</span>
+                    <div className="w-10 h-10 rounded-lg bg-paper border border-line flex items-center justify-center text-lg">
+                      {app.icon ? iconOptions.find(o => o.value === app.icon)?.emoji || '🔗' : '🔗'}
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-white font-medium text-sm">{app.name}</p>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-gray-400 border border-white/10 w-fit mt-1">
-                        {app.category}
+                      <p className="text-ink font-medium text-sm">{app.name}</p>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-ink/5 text-muted border border-line w-fit mt-1">
+                        {app.category || '未分类'}
                       </span>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => openEdit(app)} className="text-xs text-gray-400 hover:text-white transition-colors">编辑</button>
-                    <button onClick={() => setDeleteTarget(app)} className="text-xs text-red-400 hover:text-red-300 transition-colors">删除</button>
+                    <button onClick={() => openEdit(app)} className="text-xs text-muted hover:text-ink transition-colors">编辑</button>
+                    <button onClick={() => setDeleteTarget(app)} className="text-xs text-muted hover:text-claude transition-colors">删除</button>
                   </div>
-                </GlassCard>
+                </AdminCard>
               </div>
             ))}
           </div>
 
-          <Modal open={!!modal} onClose={() => { setModal(null); setForm(emptyForm) }} title={modal?.mode === 'add' ? '添加应用' : '编辑应用'}>
+          <AdminModal open={!!modal} onClose={() => { setModal(null); setForm(emptyForm) }} title={modal?.mode === 'add' ? '添加应用' : '编辑应用'}>
             <div className="space-y-4">
-              <GlassInput label="应用名称" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} />
-              <GlassInput label="URL" value={form.url} onChange={(e) => setForm({...form, url: e.target.value})} placeholder="https://" />
-              <GlassInput label="描述" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} />
+              <AdminInput label="应用名称" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} />
+              <AdminInput label="URL" value={form.url} onChange={(e) => setForm({...form, url: e.target.value})} placeholder="https://" />
+              <AdminInput label="描述" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} />
               <div>
-                <label className="block text-sm text-gray-400 mb-1.5">图标</label>
+                <label className="block text-sm text-muted mb-1.5">图标</label>
                 <select value={form.icon} onChange={(e) => setForm({...form, icon: e.target.value})}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none">
+                        className="w-full px-4 py-2.5 rounded-lg border border-line bg-paper text-ink outline-none focus:border-claude/50">
                   {iconOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1.5">分类</label>
+                <label className="block text-sm text-muted mb-1.5">分类</label>
                 <select value={form.category} onChange={(e) => setForm({...form, category: e.target.value})}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none">
+                        className="w-full px-4 py-2.5 rounded-lg border border-line bg-paper text-ink outline-none focus:border-claude/50">
                   {config?.categories?.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
-              <GlassButton onClick={handleSave} className="w-full">
+              <AdminButton onClick={handleSave} className="w-full justify-center">
                 {modal?.mode === 'add' ? '添加' : '保存'}
-              </GlassButton>
+              </AdminButton>
             </div>
-          </Modal>
+          </AdminModal>
 
-          <Modal open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="确认删除">
-            <p className="text-gray-400 text-sm mb-6">确定要删除应用 <span className="text-white">{deleteTarget?.name}</span> 吗？</p>
+          <AdminModal open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="确认删除">
+            <p className="text-muted text-sm mb-6">确定要删除应用 <span className="text-ink">{deleteTarget?.name}</span> 吗?</p>
             <div className="flex gap-3">
-              <button onClick={() => setDeleteTarget(null)} className="flex-1 glass rounded-xl py-3 text-sm text-gray-300">取消</button>
-              <button onClick={handleDelete} className="flex-1 bg-red-500/20 border border-red-500/30 rounded-xl py-3 text-sm text-red-400">删除</button>
+              <AdminButton variant="secondary" onClick={() => setDeleteTarget(null)} className="flex-1 justify-center">取消</AdminButton>
+              <AdminButton variant="danger" onClick={handleDelete} className="flex-1 justify-center">删除</AdminButton>
             </div>
-          </Modal>
+          </AdminModal>
         </main>
       </div>
     </div>
