@@ -19,14 +19,15 @@ async function proxy(req, res) {
   const token = await getBearer(req)
   if (!token) return res.status(401).json({ error: 'unauthorized' })
 
+  const hasBody = ['POST', 'PATCH', 'PUT'].includes(req.method)
   const init = {
     method: req.method,
     headers: {
       authorization: `Bearer ${token}`,
-      'content-type': 'application/json',
+      ...(hasBody ? { 'content-type': 'application/json' } : {}),
     },
   }
-  if (['POST', 'PATCH', 'PUT'].includes(req.method)) {
+  if (hasBody) {
     init.body = JSON.stringify(req.body ?? {})
   }
 

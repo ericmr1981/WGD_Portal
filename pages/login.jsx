@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { login } from '../src/lib/auth'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
   const router = useRouter()
 
   const handleSubmit = async (e) => {
@@ -14,15 +14,31 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      const session = await login(username, password)
-      if (session) {
-        const dest = typeof router.query.from === 'string' ? router.query.from : '/chat'
-        router.push(dest)
-      } else {
-        setError('账号或密码错误')
+      // Call new auth API
+      const r = await fetch('/api/auth/auth', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username, password }),
+      })
+      if (!r.ok) {
+        throw new Error('登录失败')
       }
+      const data = await r.json()
+      // Set wgd_session cookie for backward compatibility with /api/sessions routes
+      const session = {
+        id: data.user.id,
+        username: data.user.username,
+        name: data.user.username,
+        role: data.user.role,
+      }
+      const encoded =encodeURIComponent(JSON.stringify(session))
+      const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      document.cookie = `wgd_session=${encoded}; path=/; SameSite=Lax; max-age=${d.getTime() >> 10}`
+      const dest = typeof router.query.from === 'string' ? router.query.from : '/chat'
+      router.push(dest)
     } catch {
-      setError('登录失败，请重试')
+      setError('账号或密码错误')
     }
     setLoading(false)
   }

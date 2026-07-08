@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import FooterMenu from './FooterMenu'
 
 export default function Sidebar({
   sessions,
@@ -9,6 +10,10 @@ export default function Sidebar({
   onDelete,
   isAdmin,
   onOpenAdmin,
+  currentUser,
+  onLogout,
+  mobileOpen,
+  onClose,
 }) {
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState('')
@@ -22,7 +27,22 @@ export default function Sidebar({
   }
 
   return (
-    <aside className="w-[280px] h-screen min-h-0 bg-paper border-r border-line flex flex-col shrink-0">
+    <>
+      {/* Mobile overlay backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-ink/40 z-30 md:hidden"
+          onClick={onClose}
+        />
+      )}
+      <aside
+        className={`
+          w-[280px] h-screen min-h-0 bg-paper border-r border-line flex flex-col shrink-0 z-40
+          fixed md:static
+          transition-transform duration-200
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
       <div className="p-3">
         <button
           onClick={onCreate}
@@ -85,14 +105,15 @@ export default function Sidebar({
         )}
       </nav>
 
-      <div className="p-3 border-t border-line space-y-2">
-        {isAdmin && (
-          <button onClick={onOpenAdmin} className="block w-full text-left text-sm text-muted hover:text-ink">
-            管理后台 →
-          </button>
-        )}
-        <p className="text-xs text-muted">WGD Portal</p>
+      <div className="p-2 border-t border-line">
+        <FooterMenu
+          currentUser={currentUser}
+          isAdmin={isAdmin}
+          onOpenAdmin={onOpenAdmin}
+          onLogout={onLogout}
+        />
       </div>
     </aside>
+    </>
   )
 }

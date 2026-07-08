@@ -8,21 +8,25 @@ export default async function handler(req, res) {
   if (!user) return res.status(401).json({ error: 'unauthorized' })
   const token = signAgentToken(user.id).token
 
+  const hasBody = ['POST', 'PATCH', 'PUT'].includes(req.method)
   const init = {
     method: req.method,
     headers: {
       authorization: `Bearer ${token}`,
-      'content-type': 'application/json',
+      ...(hasBody ? { 'content-type': 'application/json' } : {}),
     },
   }
-  if (['POST', 'PATCH', 'PUT'].includes(req.method)) {
+  if (hasBody) {
     init.body = JSON.stringify(req.body ?? {})
   }
 
-  const agentPath = req.url.split('?')[0]
-    .replace(/^\/api\/sessions\/\[id\]/, '/api/conversations/')
-    .replace('/api/conversations/[id]', '/api/conversations/' + (req.query.id || ''))
-    .replace(/\/\[id\]/, '/' + (req.query.id || ''))
+  // req.url is /api/sessions/<actual-id> after Next decodes the route param
+  // e.g. /api/sessions/123 -> keep, /api/sessions/abc -> keep
+  // Need to strip /api/sessions prefix and convert to /api/conversations/
+  const url = req.url.split('?')[0]
+  const agentPath = url
+    .replace(/^\/api\/sessions/, '/api/conversations')
+    .replace(/docs\/superpowers\//, '')  // fallback for when this file gets copied around
 
   const upstream = await fetch(`${AGENT_BASE}${agentPath}`, init)
   const text = await upstream.text()

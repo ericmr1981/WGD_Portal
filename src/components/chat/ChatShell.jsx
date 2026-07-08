@@ -20,6 +20,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const [sessions, setSessions] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [messages, setMessages] = useState([])
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [streamingSteps, setStreamingSteps] = useState([])
   const [streaming, setStreaming] = useState(false)
   const [failed, setFailed] = useState(false)
@@ -88,13 +89,13 @@ export default function ChatShell({ currentUser, isAdmin }) {
     onConnectionChange: setConnState,
   })
 
-  const sendMessage = ({ content, brand }) => {
+  const sendMessage = ({ content, brand, attachments = [] }) => {
     if (!activeId) return
     setMessages((m) => [...m, { id: `tmp-${Date.now()}`, role: 'user', content }])
     setStreaming(true)
     setFailed(false)
     setStreamingSteps([])
-    send({ conversationId: activeId, content, brand })
+    send({ conversationId: activeId, content, brand, attachments })
   }
 
   const onCreate = async () => {
@@ -143,14 +144,32 @@ export default function ChatShell({ currentUser, isAdmin }) {
       <Sidebar
         sessions={sessions}
         activeId={activeId}
-        onSelect={setActiveId}
+        onSelect={(id) => {
+          setActiveId(id)
+          setMobileOpen(false)
+        }}
         onCreate={onCreate}
         onRename={onRename}
         onDelete={onDelete}
         isAdmin={isAdmin}
         onOpenAdmin={onOpenAdmin}
+        currentUser={currentUser}
+        mobileOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        onLogout={async () => {
+          await fetch('/api/auth/dev-logout', { method: 'POST', credentials: 'include' })
+          window.location.href = '/login'
+        }}
       />
-      <div className="flex-1 min-h-0 h-full flex flex-col">
+      <div className="flex-1 min-h-0 h-full flex flex-col flex">
+        {/* Mobile menu toggle */}
+        <button
+          onClick={() => setMobileOpen((v) => !v)}
+          className="md:hidden p-3 -ml-3 text-ink hover:bg-hover -mr-3"
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
         <header className="shrink-0 border-b border-line px-6 py-3 text-sm text-muted bg-paper flex items-center justify-between">
           <span>
             {connState === 'ok' ? '已连接' :
