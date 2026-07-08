@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import FooterMenu from './FooterMenu'
+import AppCard from './AppCard'
 
 export default function Sidebar({
   sessions,
@@ -14,10 +15,13 @@ export default function Sidebar({
   onLogout,
   mobileOpen,
   onClose,
+  apps = [],
+  onOpenApp,
 }) {
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState('')
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+  const [sidebarAppModalOpen, setSidebarAppModalOpen] = useState(false)
 
   const commitRename = (id) => {
     const t = draft.trim()
@@ -104,6 +108,30 @@ export default function Sidebar({
           ))
         )}
       </nav>
+
+      {/* Applications list */}
+      {apps.length > 0 && (
+        <div className="p-3 border-t border-line space-y-2">
+          <p className="text-xs text-muted uppercase tracking-wide mb-2">应用</p>
+          <div className="grid grid-cols-2 gap-2">
+            {apps.slice(0, 4).map((app) => (
+              <AppCard
+                key={app.id}
+                app={app}
+                onClick={() => onOpenApp?.(app.url)}
+              />
+            ))}
+          </div>
+          {apps.length > 4 && (
+            <button
+              onClick={() => onOpenAdmin?.()}
+              className="w-full text-left px-3 py-2 rounded-lg border border-line bg-paper hover:bg-hover text-ink text-xs"
+            >
+              + 显示全部应用 ({apps.length})
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="p-2 border-t border-line">
         <FooterMenu

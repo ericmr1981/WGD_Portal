@@ -21,6 +21,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const [activeId, setActiveId] = useState(null)
   const [messages, setMessages] = useState([])
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [apps, setApps] = useState([])
   const [streamingSteps, setStreamingSteps] = useState([])
   const [streaming, setStreaming] = useState(false)
   const [failed, setFailed] = useState(false)
@@ -38,6 +39,18 @@ export default function ChatShell({ currentUser, isAdmin }) {
     } catch {}
   }
   useEffect(() => { loadSessions() }, [])
+
+  // load apps
+  const loadApps = async () => {
+    try {
+      const r = await fetch('/api/apps', { credentials: 'include' })
+      if (r.ok) {
+        const d = await r.json()
+        setApps(Array.isArray(d) ? d : [])
+      }
+    } catch {}
+  }
+  useEffect(() => { loadApps() }, [])
 
   // load messages when active changes
   useEffect(() => {
@@ -139,6 +152,10 @@ export default function ChatShell({ currentUser, isAdmin }) {
 
   const onOpenAdmin = () => { window.location.href = '/admin' }
 
+  const onOpenApp = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="chat-root h-screen overflow-hidden flex bg-paper">
       <Sidebar
@@ -154,6 +171,8 @@ export default function ChatShell({ currentUser, isAdmin }) {
         isAdmin={isAdmin}
         onOpenAdmin={onOpenAdmin}
         currentUser={currentUser}
+        apps={apps}
+        onOpenApp={onOpenApp}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         onLogout={async () => {
