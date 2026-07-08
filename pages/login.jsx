@@ -32,9 +32,8 @@ export default function LoginPage() {
         name: data.user.username,
         role: data.user.role,
       }
-      const encoded =encodeURIComponent(JSON.stringify(session))
-      const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      document.cookie = `wgd_session=${encoded}; path=/; SameSite=Lax; max-age=${d.getTime() >> 10}`
+      const encoded = encodeURIComponent(JSON.stringify(session))
+      document.cookie = `wgd_session=${encoded}; path=/; SameSite=Lax; max-age=604800`
       const dest = typeof router.query.from === 'string' ? router.query.from : '/chat'
       router.push(dest)
     } catch {
