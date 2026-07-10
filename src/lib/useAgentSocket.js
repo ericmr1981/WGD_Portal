@@ -12,7 +12,6 @@ export function clampInput(text) {
 }
 
 export function defaultUseAgentSocket({
-export { defaultUseAgentSocket as useAgentSocket }
   onUpdate = () => {},
   onDone = () => {},
   onError = () => {},
@@ -94,4 +93,5 @@ export { defaultUseAgentSocket as useAgentSocket }
   return { send }
 }
 
+export { defaultUseAgentSocket as useAgentSocket }
 export default defaultUseAgentSocket
