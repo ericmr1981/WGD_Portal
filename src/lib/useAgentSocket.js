@@ -12,6 +12,7 @@ export function clampInput(text) {
 }
 
 export function defaultUseAgentSocket({
+export { defaultUseAgentSocket as useAgentSocket }
   onUpdate = () => {},
   onDone = () => {},
   onError = () => {},
@@ -20,6 +21,16 @@ export function defaultUseAgentSocket({
   const wsRef = useRef(null)
   const attemptRef = useRef(0)
   const closedByUserRef = useRef(false)
+  // 等待 WS OPEN 期间入队的消息
+  const pendingRef = useRef([])
+
+  const flushPending = () => {
+    const ws = wsRef.current
+    if (!ws || ws.readyState !== 1) return
+    while (pendingRef.current.length > 0) {
+      ws.send(JSON.stringify(pendingRef.current.shift()))
+    }
+  }
 
   const connect = async () => {
     try {
@@ -35,6 +46,7 @@ export function defaultUseAgentSocket({
       ws.onopen = () => {
         attemptRef.current = 0
         onConnectionChange('ok')
+        flushPending()
       }
       ws.onmessage = (ev) => {
         try {
@@ -71,8 +83,12 @@ export function defaultUseAgentSocket({
   }, [])
 
   const send = (msg) => {
-    if (wsRef.current?.readyState === 1) {
-      wsRef.current.send(JSON.stringify(msg))
+    const ws = wsRef.current
+    if (ws && ws.readyState === 1) {
+      ws.send(JSON.stringify(msg))
+    } else {
+      // WS 还没 OPEN(CONNECTING)或者断线重连中 — 入队等 onopen flush
+      pendingRef.current.push(msg)
     }
   }
   return { send }
