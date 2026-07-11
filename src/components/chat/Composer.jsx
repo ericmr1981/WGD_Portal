@@ -1,105 +1,239 @@
-import { useState, useRef } from 'react'
-import BrandSelect from './BrandSelect'
-import { clampInput } from '../../lib/useAgentSocket'
+import { useState, useRef, useEffect } from 'react'
 
-// Attachment item in textarea
-function AttachmentItem({ fileName, uploadId, onRemove }) {
+/**
+ * 截断输入内容（防 token 溢出），同步版本。
+ * 被 Composer 的 handleSend 调用。
+ */
+function clampInput(content) {
+  if (!content) return ''
+  const MAX_CHARS = 8000
+  if (content.length <= MAX_CHARS) return content
+  return content.slice(0, MAX_CHARS) + '\n…(截断)'
+
+// 单个附件 chip — 显示文件名 + 大小
+function AttachmentChip({ file, onRemove }) {
   return (
     <button
-      onClick={() => onRemove(uploadId)}
-      className="inline-flex items-center gap-1.5 px-2 py-1 bg-ink/10 text-ink text-xs rounded-md hover:bg-ink/20"
+      onClick={() => onRemove(file.uploadId)}
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-hover border border-line
+                 text-ink text-xs rounded-md hover:border-claude/40 transition"
+      title="移除附件"
     >
-      <span>📎 {fileName}</span>
+      <span>📎</span>
+      <span className="max-w-[160px] truncate">{file.fileName}</span>
+      <span className="text-muted">{file.sizeLabel}</span>
       <span className="text-muted">×</span>
     </button>
   )
 }
+
+// Auto-resize textarea height between [min, max]
+function autoResize(el, min = 36, max = 200) {
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = Math.min(Math.max(el.scrollHeight, min), max) + 'px'
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`
+}
+
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      // result is "data:<mime>;base64,<data>"
+      const result = reader.result
+      const idx = String(result).indexOf(',')
+      resolve(idx >= 0 ? String(result).slice(idx + 1) : String(result))
+    }
+    reader.onerror = () => reject(new Error('read_failed'))
+    reader.readAsDataURL(file)
+  })
+}
+
+const MAX_INLINE_BYTES = 1 * 1024 * 1024 // 1 MB — base64 后 ~1.4 MB,WS 安全
 
 export default function Composer({ onSend, disabled }) {
   const [text, setText] = useState('')
   const [brand, setBrand] = useState('')
   const [attachments, setAttachments] = useState([])
   const [oversize, setOversize] = useState(false)
+  const [brandOpen, setBrandOpen] = useState(false)
+  const [error, setError] = useState('')
   const fileInputRef = useRef(null)
-  const uploadInputRef = useRef(null)
-  const [pendingUploadId, setPendingUploadId] = useState(null)
+  const textareaRef = useRef(null)
+  const brandMenuRef = useRef(null)
 
-  const placeholders = [
-    '今天银行流水里有哪些待处理风险？',
-    '帮我看下这个月的业绩',
-    '汇总下各部门的实时 KPI',
-  ]
+  // Auto-resize on text change
+  useEffect(() => {
+    autoResize(textareaRef.current)
+  }, [text])
 
-  const submit = async () => {
-    const t = text.trim()
-    if (!t && attachments.length === 0) return
-    const { text: clamped, oversize: o } = clampInput(text)
-    setOversize(o)
-    const payload = {
-      content: clamped,
-      brand: brand || null,
-      attachments: attachments.map((a) => ({ type: 'file', uploadId: a })),
+  // Close brand menu on outside click
+  useEffect(() => {
+    if (!brandOpen) return
+    const handler = (e) => {
+      if (brandMenuRef.current && !brandMenuRef.current.contains(e.target)) {
+        setBrandOpen(false)
+      }
     }
-    onSend(payload)
-    setText('')
-    setAttachments([])
-  }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [brandOpen])
 
-  const handleFilePick = async (e) => {
+  const handleFilePick = (e) => {
     const file = e.target.files?.[0]
     if (!file) return
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      setPendingUploadId(file.name.slice(0, 20)) // show pending state
-      const r = await fetch('/api/uploads', {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      })
-      if (!r.ok) throw new Error()
-      const { uploadId, filename } = await r.json()
-      setAttachments((arr) => [...arr, { fileName: filename, uploadId }])
-    } catch {
-      alert('上传失败,请重试')
-    } finally {
-      setPendingUploadId(null)
+    setError('')
+    if (file.size > MAX_INLINE_BYTES) {
+      setError(`文件过大 (${formatSize(file.size)}),最大支持 ${formatSize(MAX_INLINE_BYTES)}`)
       if (fileInputRef.current) fileInputRef.current.value = ''
+      return
     }
+    setAttachments((arr) => [
+      ...arr,
+      {
+        file, // 真实 File 对象
+        uploadId: crypto.randomUUID(),
+        fileName: file.name,
+        size: file.size,
+        sizeLabel: formatSize(file.size),
+        mimeType: file.type || 'application/octet-stream',
+      },
+    ])
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const handleRemove = (uploadId) => {
     setAttachments((arr) => arr.filter((a) => a.uploadId !== uploadId))
   }
 
+  const submit = async () => {
+    const t = text.trim()
+    if (!t && attachments.length === 0) return
+    setError('')
+
+    // 把附件内联到 content 末尾(每个一段)
+    const inlineParts = []
+    for (const a of attachments) {
+      try {
+        const b64 = await fileToBase64(a.file)
+        inlineParts.push(
+          `\n\n[附件: ${a.fileName} | ${a.mimeType} | ${a.sizeLabel}]\ndata:attachment;base64,${b64}`
+        )
+      } catch {
+        setError(`读取文件失败: ${a.fileName}`)
+        return
+      }
+    }
+    const finalContent = t + inlineParts.join('')
+    const { text: finalText, oversize } = finalContent.length > 8000
+      ? { text: finalContent.slice(0, 8000) + '\n…(截断)', oversize: true }
+      : { text: finalContent, oversize: false }
+    setOversize(o)
+
+    // attachments 字段仍然保留 uploadId 引用(未来 agent 支持了可以直接 fetch)
+    // 但当前对 agent 来说,文件内容已经在 content 里
+    onSend({
+      content: clamped,
+      brand: brand || null,
+      attachments: attachments.map((a) => ({
+        type: 'file',
+        uploadId: a.uploadId,
+        fileName: a.fileName,
+        mimeType: a.mimeType,
+        size: a.size,
+      })),
+    })
+    setText('')
+    setAttachments([])
+    setBrand('')
+    setTimeout(() => autoResize(textareaRef.current, 36, 24), 0)
+  }
+
+  const canSend = !disabled && (text.trim() || attachments.length > 0)
+
   return (
-    <div className="shrink-0 border-t border-line bg-paper px-6 py-4">
-      <div className="max-w-[720px] mx-auto space-y-1">
+    <div className="shrink-0 bg-paper px-4 pb-4 pt-2">
+      <div className="max-w-[720px] mx-auto">
         {oversize && (
-          <p className="text-claude text-xs mb-2">内容超过 32000 字符,已截断</p>
+          <p className="text-claude text-xs mb-2 px-1">内容超过 32000 字符,已截断</p>
         )}
-        <div className="flex items-end gap-2 border border-line rounded-2xl px-3 py-2 bg-paper">
+        {error && (
+          <p className="text-claude text-xs mb-2 px-1">{error}</p>
+        )}
+
+        {/* Attached files row */}
+        {attachments.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2 px-1">
+            {attachments.map((a) => (
+              <AttachmentChip key={a.uploadId} file={a} onRemove={handleRemove} />
+            ))}
+          </div>
+        )}
+
+        {/* Capsule composer */}
+        <div className="flex items-end gap-2 border border-line rounded-2xl bg-paper
+                        shadow-sm focus-within:border-claude/40 focus-within:shadow-md
+                        transition-all px-3 py-2">
           <textarea
+            ref={textareaRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
+              if (e.nativeEvent.isComposing || e.keyCode === 229) return
+              if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault()
                 submit()
               }
             }}
-            onCompositionStart={() => {}}
-            onCompositionEnd={(e) => {}}
-            placeholder={placeholders[Math.floor(Math.random() * placeholders.length)]}
+            placeholder="发消息、问数据,或者上传文件…"
             rows={1}
-            className="flex-1 resize-none bg-paper text-ink placeholder:text-muted focus:outline-none text-sm"
-            style={{ minHeight: 36, maxHeight: 200 }}
+            className="flex-1 resize-none bg-paper text-ink placeholder:text-muted
+                       focus:outline-none text-sm leading-6 py-1"
           />
-          <BrandSelect value={brand} onChange={setBrand} />
 
-          {/* File upload button */}
-          <div className="relative">
+          {/* Brand selector */}
+          <div ref={brandMenuRef} className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setBrandOpen((v) => !v)}
+              className={`px-2.5 py-1.5 rounded-lg text-xs border transition
+                          ${brand
+                            ? 'border-claude/40 bg-claude/10 text-claude'
+                            : 'border-transparent text-muted hover:text-ink hover:bg-hover'}`}
+              title="选择品牌上下文"
+            >
+              {brand || '品牌'} <span className="opacity-60">⌄</span>
+            </button>
+            {brandOpen && (
+              <div className="absolute bottom-full right-0 mb-2 min-w-[140px]
+                              bg-paper border border-line rounded-xl shadow-lg overflow-hidden py-1">
+                {[
+                  { value: '', label: '不限品牌' },
+                  { value: '蜜可诗', label: '蜜可诗' },
+                  { value: '旺鼎阁', label: '旺鼎阁' },
+                  { value: '泰柯茶园', label: '泰柯茶园' },
+                ].map((o) => (
+                  <button
+                    key={o.value || 'none'}
+                    type="button"
+                    onClick={() => { setBrand(o.value); setBrandOpen(false) }}
+                    className={`w-full text-left px-3 py-1.5 text-xs hover:bg-hover
+                                ${brand === o.value ? 'text-claude font-medium' : 'text-ink'}`}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* File upload */}
+          <div className="relative shrink-0">
             <input
               ref={fileInputRef}
               type="file"
@@ -107,36 +241,34 @@ export default function Composer({ onSend, disabled }) {
               onChange={handleFilePick}
             />
             <button
+              type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 rounded-lg hover:bg-hover text-muted hover:text-ink transition"
+              className="p-2 rounded-lg text-muted hover:text-ink hover:bg-hover transition"
               title="上传文件"
             >
               📎
             </button>
           </div>
 
+          {/* Send */}
           <button
+            type="button"
             onClick={submit}
-            disabled={disabled || (!text.trim() && attachments.length === 0)}
-            className="px-4 py-1.5 rounded-lg bg-ink text-paper text-sm disabled:opacity-40 hover:opacity-90 transition"
+            disabled={!canSend}
+            className="shrink-0 w-9 h-9 rounded-full bg-claude text-paper flex items-center
+                       justify-center text-base disabled:opacity-30 disabled:cursor-not-allowed
+                       hover:opacity-90 active:scale-95 transition"
+            title="发送 (Enter)"
           >
-            {pendingUploadId ? '上传中...' : '发送'}
+            ↑
           </button>
         </div>
 
-        {/* Attached files */}
-        {attachments.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {attachments.map((a) => (
-              <AttachmentItem
-                key={a.uploadId}
-                fileName={a.fileName}
-                uploadId={a.uploadId}
-                onRemove={handleRemove}
-              />
-            ))}
-          </div>
-        )}
+        {/* Keyboard hint row */}
+        <div className="flex items-center justify-center gap-3 mt-2 text-[11px] text-muted">
+          <span><kbd className="px-1.5 py-0.5 rounded border border-line bg-paper">↵</kbd> 发送</span>
+          <span><kbd className="px-1.5 py-0.5 rounded border border-line bg-paper">⇧ ↵</kbd> 换行</span>
+        </div>
       </div>
     </div>
   )
