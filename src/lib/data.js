@@ -134,3 +134,41 @@ export async function resetPassword(userId, newPassword) {
   if (error) return { success: false, error: error.message }
   return data
 }
+
+// ---- Prompts ----
+
+export async function getPrompts() {
+  const { data, error } = await supabase.rpc('public_prompts')
+  if (error) return []
+  return data?.prompts || []
+}
+
+export async function adminGetPrompts() {
+  const session = getSession()
+  if (!session) return []
+  const { data, error } = await supabase.rpc('admin_get_prompts')
+  if (error) return []
+  return data?.prompts || []
+}
+
+export async function adminUpsertPrompt({ id, icon, title, desc, prompt }) {
+  const session = getSession()
+  if (!session) return { success: false }
+  const { data, error } = await supabase.rpc('admin_upsert_prompt', {
+    p_id: id || null,
+    p_icon: icon,
+    p_title: title,
+    p_desc: desc,
+    p_prompt: prompt,
+  })
+  if (error) return { success: false, error: error.message }
+  return data
+}
+
+export async function adminDeletePrompt(id) {
+  const session = getSession()
+  if (!session) return { success: false }
+  const { data, error } = await supabase.rpc('admin_delete_prompt', { p_id: id })
+  if (error) return { success: false, error: error.message }
+  return data
+}

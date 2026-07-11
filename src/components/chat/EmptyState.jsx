@@ -1,36 +1,26 @@
-// 4 example prompts — Claude.ai × ChatGPT hybrid card grid
-const PROMPTS = [
-  {
-    icon: '📊',
-    title: '业绩速览',
-    desc: '本月各品牌营收对比',
-    prompt: '本月蜜可诗 / 旺鼎阁 / 泰柯茶园的营收分别是多少?做一张对比图',
-  },
-  {
-    icon: '⚠️',
-    title: '异常交易',
-    desc: '查看本周风险流水',
-    prompt: '本周银行流水里有哪些待处理风险?列出来',
-  },
-  {
-    icon: '💰',
-    title: '账户余额',
-    desc: '当前各账户实时余额',
-    prompt: '现在所有银行账户的余额分别是多少?',
-  },
-  {
-    icon: '📈',
-    title: 'KPI 汇总',
-    desc: '各部门实时表现',
-    prompt: '汇总下各部门本周的实时 KPI,标出偏离目标的项',
-  },
+import { useEffect, useState } from 'react'
+import { getPrompts } from '../../lib/data'
+
+// Fallback when DB unavailable
+const FALLBACK_PROMPTS = [
+  { icon: '📊', title: '业绩速览', desc: '本月各品牌营收对比', prompt: '本月蜜可诗 / 旺鼎阁 / 泰柯茶园的营收分别是多少?做一张对比图' },
+  { icon: '⚠️', title: '异常交易', desc: '查看本周风险流水', prompt: '本周银行流水里有哪些待处理风险?列出来' },
+  { icon: '💰', title: '账户余额', desc: '当前各账户实时余额', prompt: '现在所有银行账户的余额分别是多少?' },
+  { icon: '📈', title: 'KPI 汇总', desc: '各部门实时表现', prompt: '汇总下各部门本周的实时 KPI,标出偏离目标的项' },
 ]
 
 export default function EmptyState({ onPick }) {
+  const [cards, setCards] = useState(FALLBACK_PROMPTS)
+
+  useEffect(() => {
+    getPrompts().then((data) => {
+      if (data && data.length > 0) setCards(data)
+    })
+  }, [])
+
   return (
     <div className="flex-1 flex items-center justify-center px-6 bg-paper">
       <div className="max-w-[720px] w-full">
-        {/* Logo + title block */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-claude/10 mb-4">
             <span className="text-2xl">✦</span>
@@ -39,9 +29,8 @@ export default function EmptyState({ onPick }) {
           <p className="text-muted text-sm">关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊</p>
         </div>
 
-        {/* Prompt cards — 2x2 grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {PROMPTS.map((p) => (
+          {cards.map((p) => (
             <button
               key={p.title}
               onClick={() => onPick(p.prompt)}

@@ -64,6 +64,14 @@ export function useAgentSocket({
       ws.onclose = (ev) => {
         if (closedByUserRef.current) return
         if (ev.code === 4000) { onConnRef.current('failed'); return }
+        // 1008 = Policy Violation (e.g. invalid_token) — retry once in case JWKS was updated
+        if (ev.code === 1008) {
+          if (attemptRef.current >= 1) { onConnRef.current('failed'); return }
+          onConnRef.current('reconnecting')
+          attemptRef.current += 1
+          timerRef.current = setTimeout(() => { if (!closedByUserRef.current) connect() }, 3000)
+          return
+        }
         onConnRef.current('reconnecting')
         const idx = Math.min(attemptRef.current, BACKOFF_MS.length - 1)
         attemptRef.current += 1

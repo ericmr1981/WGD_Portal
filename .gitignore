@@ -4,3 +4,5 @@ node_modules/
 .next/
 out/
 out 3/
+*.png
+.playwright-mcp/

@@ -59,31 +59,16 @@ const MAX_INLINE_BYTES = 1 * 1024 * 1024 // 1 MB — base64 后 ~1.4 MB,WS 安�
 
 export default function Composer({ onSend, disabled }) {
   const [text, setText] = useState('')
-  const [brand, setBrand] = useState('')
   const [attachments, setAttachments] = useState([])
   const [oversize, setOversize] = useState(false)
-  const [brandOpen, setBrandOpen] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef(null)
   const textareaRef = useRef(null)
-  const brandMenuRef = useRef(null)
 
   // Auto-resize on text change
   useEffect(() => {
     autoResize(textareaRef.current)
   }, [text])
-
-  // Close brand menu on outside click
-  useEffect(() => {
-    if (!brandOpen) return
-    const handler = (e) => {
-      if (brandMenuRef.current && !brandMenuRef.current.contains(e.target)) {
-        setBrandOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [brandOpen])
 
   const handleFilePick = (e) => {
     const file = e.target.files?.[0]
@@ -140,7 +125,6 @@ export default function Composer({ onSend, disabled }) {
     // 但当前对 agent 来说,文件内容已经在 content 里
     onSend({
       content: finalText,
-      brand: brand || null,
       attachments: attachments.map((a) => ({
         type: 'file',
         uploadId: a.uploadId,
@@ -151,7 +135,6 @@ export default function Composer({ onSend, disabled }) {
     })
     setText('')
     setAttachments([])
-    setBrand('')
     setTimeout(() => autoResize(textareaRef.current, 36, 24), 0)
   }
 
@@ -196,42 +179,6 @@ export default function Composer({ onSend, disabled }) {
             className="flex-1 resize-none bg-paper text-ink placeholder:text-muted
                        focus:outline-none text-sm leading-6 py-1"
           />
-
-          {/* Brand selector */}
-          <div ref={brandMenuRef} className="relative shrink-0">
-            <button
-              type="button"
-              onClick={() => setBrandOpen((v) => !v)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs border transition
-                          ${brand
-                            ? 'border-claude/40 bg-claude/10 text-claude'
-                            : 'border-transparent text-muted hover:text-ink hover:bg-hover'}`}
-              title="选择品牌上下文"
-            >
-              {brand || '品牌'} <span className="opacity-60">⌄</span>
-            </button>
-            {brandOpen && (
-              <div className="absolute bottom-full right-0 mb-2 min-w-[140px]
-                              bg-paper border border-line rounded-xl shadow-lg overflow-hidden py-1">
-                {[
-                  { value: '', label: '不限品牌' },
-                  { value: '蜜可诗', label: '蜜可诗' },
-                  { value: '旺鼎阁', label: '旺鼎阁' },
-                  { value: '泰柯茶园', label: '泰柯茶园' },
-                ].map((o) => (
-                  <button
-                    key={o.value || 'none'}
-                    type="button"
-                    onClick={() => { setBrand(o.value); setBrandOpen(false) }}
-                    className={`w-full text-left px-3 py-1.5 text-xs hover:bg-hover
-                                ${brand === o.value ? 'text-claude font-medium' : 'text-ink'}`}
-                  >
-                    {o.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* File upload */}
           <div className="relative shrink-0">

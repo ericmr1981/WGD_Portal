@@ -15,7 +15,6 @@ function normalizeSession(s) {
   }
 }
 
-// 兼容旧版字符串 content → ContentBlock[]
 function normalizeContent(content) {
   if (Array.isArray(content)) return content
   if (typeof content === 'string' && content) return [{ type: 'text', text: content }]
@@ -31,8 +30,8 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const [connState, setConnState] = useState('connecting')
   const [isStreaming, setIsStreaming] = useState(false)
   const justCreatedRef = useRef(false)
+  const streamingMsgRef = useRef(null)
 
-  // load sessions
   const loadSessions = async () => {
     try {
       const r = await fetch('/api/sessions', { credentials: 'include' })
@@ -43,25 +42,17 @@ export default function ChatShell({ currentUser, isAdmin }) {
   }
   useEffect(() => { loadSessions() }, [])
 
-  // load apps
   const loadApps = async () => {
     try {
       const r = await fetch('/api/apps', { credentials: 'include' })
-      if (r.ok) {
-        const d = await r.json()
-        setApps(Array.isArray(d) ? d : [])
-      }
+      if (r.ok) { const d = await r.json(); setApps(Array.isArray(d) ? d : []) }
     } catch {}
   }
   useEffect(() => { loadApps() }, [])
 
-  // load messages when active changes
   useEffect(() => {
     if (!activeId) { setMessages([]); return }
-    if (justCreatedRef.current) {
-      justCreatedRef.current = false
-      return
-    }
+    if (justCreatedRef.current) { justCreatedRef.current = false; return }
     (async () => {
       try {
         const r = await fetch(`/api/sessions/${activeId}/messages`, { credentials: 'include' })
@@ -69,20 +60,23 @@ export default function ChatShell({ currentUser, isAdmin }) {
         const d = await r.json()
         const list = Array.isArray(d) ? d : (d?.messages ?? [])
         setMessages(list.map((m) => ({
-          id: m.messageId ?? m.id,
-          role: m.role,
+          id: m.messageId ?? m.id, role: m.role,
           content: normalizeContent(m.content),
-          status: m.status || 'done',
-          stop_reason: m.stop_reason ?? null,
-          usage: m.usage ?? null,
+          status: m.status || 'done', stop_reason: m.stop_reason ?? null, usage: m.usage ?? null,
           createdAt: m.createdAt ?? m.created_at,
         })))
       } catch { setMessages([]) }
     })()
   }, [activeId])
 
-  // ── WS 事件处理 ──
+  const flush = () => {
+    const s = streamingMsgRef.current
+    if (!s) return
+    setMessages((prev) => { const n = [...prev]; n[n.length - 1] = { ...s }; return n })
+  }
+
   const onEvent = useCallback((event) => {
+    const s = streamingMsgRef.current
     switch (event.type) {
       case 'ack': {
         const ackId = event.payload?.messageId
@@ -90,269 +84,154 @@ export default function ChatShell({ currentUser, isAdmin }) {
           setMessages((prev) => {
             const idx = prev.findIndex(m => m.role === 'user' && m.status === 'pending')
             if (idx === -1) return prev
-            const next = [...prev]
-            next[idx] = { ...next[idx], id: ackId, status: 'sent' }
-            return next
+            const n = [...prev]; n[idx] = { ...n[idx], id: ackId, status: 'sent' }; return n
           })
         }
         break
       }
       case 'message_start': {
         const msg = event.payload?.message || event.payload
+        if (!s) {
+          streamingMsgRef.current = {
+            id: msg.id, role: 'assistant', status: 'streaming',
+            content: [], stop_reason: null, usage: null,
+            progress: 'Intake', toolCount: 0, textContent: '',
+          }
+          setMessages((prev) => [...prev, streamingMsgRef.current])
+        } else {
+          s.id = msg.id; s.progress = 'Intake'
+          flush()
+        }
         setIsStreaming(true)
-        setMessages((prev) => [...prev, {
-          id: msg.id,
-          role: 'assistant',
-          status: 'streaming',
-          content: [],
-          stop_reason: null,
-          usage: null,
-        }])
         break
       }
       case 'content_block_start': {
+        if (!s) break
         const block = event.payload?.content_block
         if (!block) break
-        setMessages((prev) => {
-          const next = [...prev]
-          const last = next[next.length - 1]
-          if (!last || last.role !== 'assistant') return next
-          next[next.length - 1] = { ...last, content: [...last.content, block] }
-          return next
-        })
+        s.progress =
+          block.type === 'thinking' ? 'Thinking'
+          : block.type === 'tool_use' ? 'Calling tool'
+          : block.type === 'tool_result' ? 'Thinking'
+          : block.type === 'text' ? 'Writing'
+          : s.progress
+        if (block.type === 'tool_use') s.toolCount = (s.toolCount || 0) + 1
+        s.content = [...s.content, block]
+        flush()
         break
       }
       case 'content_block_delta': {
+        if (!s) break
         const { index, delta } = event.payload || {}
-        if (delta == null) break
-        setMessages((prev) => {
-          const next = [...prev]
-          const last = next[next.length - 1]
-          if (!last || last.role !== 'assistant') return next
-          if (!last.content[index]) return next
-          const blocks = [...last.content]
-          const block = { ...blocks[index] }
-          if (delta.type === 'text_delta') block.text = (block.text || '') + delta.text
-          else if (delta.type === 'thinking_delta') block.thinking = (block.thinking || '') + delta.thinking
-          else if (delta.type === 'input_json_delta') {
-            const base = typeof block.input === 'string' ? block.input : (block.input && Object.keys(block.input).length > 0 ? JSON.stringify(block.input) : '')
-            block.input = base + delta.partial_json
-          }
-          blocks[index] = block
-          next[next.length - 1] = { ...last, content: blocks }
-          return next
-        })
+        if (delta == null || !s.content[index]) return
+        const block = { ...s.content[index] }
+        if (delta.type === 'text_delta') {
+          block.text = (block.text || '') + delta.text
+          s.textContent = (s.textContent || '') + delta.text
+        } else if (delta.type === 'thinking_delta') {
+          block.thinking = (block.thinking || '') + delta.thinking
+        } else if (delta.type === 'input_json_delta') {
+          const base = typeof block.input === 'string' ? block.input : (block.input && Object.keys(block.input).length > 0 ? JSON.stringify(block.input) : '')
+          block.input = base + delta.partial_json
+        }
+        s.content[index] = block
+        flush()
         break
       }
       case 'content_block_stop':
         break
       case 'message_delta': {
-        setMessages((prev) => {
-          const next = [...prev]
-          const last = next[next.length - 1]
-          if (!last) return next
-          next[next.length - 1] = {
-            ...last,
-            stop_reason: event.payload?.delta?.stop_reason ?? last.stop_reason,
-            usage: event.payload?.usage ?? last.usage,
-          }
-          return next
-        })
+        if (!s) break
+        const sr = event.payload?.delta?.stop_reason ?? s.stop_reason
+        s.stop_reason = sr
+        s.usage = event.payload?.usage ?? s.usage
+        if (sr === 'tool_use') s.progress = 'Calling tool'
+        flush()
         break
       }
       case 'message_stop': {
+        if (!s) break
+        if (s.stop_reason === 'tool_use') { s.progress = 'Calling tool'; flush(); return }
+        s.status = 'done'; s.progress = undefined
+        flush()
+        streamingMsgRef.current = null
         setIsStreaming(false)
-        setMessages((prev) => {
-          const next = [...prev]
-          const last = next[next.length - 1]
-          if (!last) return next
-          next[next.length - 1] = { ...last, status: 'done' }
-          return next
-        })
         break
       }
       case 'error': {
-        setIsStreaming(false)
+        streamingMsgRef.current = null; setIsStreaming(false)
         setMessages((prev) => {
-          const next = [...prev]
-          const last = next[next.length - 1]
-          if (last && last.status === 'streaming') {
-            next[next.length - 1] = {
-              ...last,
-              status: 'error',
-              content: [...last.content, { type: 'text', text: `[${event.payload?.code || 'error'}] ${event.payload?.message || '未知错误'}` }],
-            }
-          } else {
-            next.push({
-              id: crypto.randomUUID(),
-              role: 'assistant',
-              status: 'error',
-              content: [{ type: 'text', text: `[${event.payload?.code || 'error'}] ${event.payload?.message || '未知错误'}` }],
-              stop_reason: null,
-              usage: null,
-            })
-          }
-          return next
+          const n = [...prev]; const l = n[n.length - 1]
+          if (l && l.status === 'streaming') n[n.length - 1] = { ...l, status: 'error', progress: undefined }
+          else n.push({ id: crypto.randomUUID(), role: 'assistant', status: 'error', content: [{ type: 'text', text: `[${event.payload?.code || 'error'}] ${event.payload?.message || '未知错误'}` }], stop_reason: null, usage: null })
+          return n
         })
         break
       }
       case 'interrupted': {
-        setIsStreaming(false)
-        setMessages((prev) => {
-          const next = [...prev]
-          const last = next[next.length - 1]
-          if (last) next[next.length - 1] = { ...last, status: 'interrupted' }
-          return next
-        })
+        streamingMsgRef.current = null; setIsStreaming(false)
+        setMessages((prev) => { const n = [...prev]; const l = n[n.length - 1]; if (l) n[n.length - 1] = { ...l, status: 'interrupted', progress: undefined }; return n })
         break
       }
-      default:
-        break
     }
   }, [])
 
   const { send } = useAgentSocket({
     onEvent,
-    onConnectionChange: (state) => {
-      setConnState(state)
-      if (state === 'reconnecting' || state === 'failed') setIsStreaming(false)
-    },
+    onConnectionChange: (state) => { setConnState(state); if (state === 'reconnecting' || state === 'failed') setIsStreaming(false) },
   })
 
-  const sendMessage = async ({ content, brand, attachments = [] }) => {
+  const sendMessage = async ({ content, attachments = [] }) => {
     const clientMsgId = crypto.randomUUID()
-    setMessages((m) => [...m, {
-      id: clientMsgId,
-      role: 'user',
-      content: [{ type: 'text', text: content }],
-      status: 'pending',
-      stop_reason: null,
-      usage: null,
-    }])
+    setMessages((m) => [...m, { id: clientMsgId, role: 'user', content: [{ type: 'text', text: content }], status: 'pending', stop_reason: null, usage: null }])
     setIsStreaming(true)
-
     let convId = activeId
     if (!convId) {
       try {
-        const r = await fetch('/api/sessions', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({}),
-        })
+        const r = await fetch('/api/sessions', { method: 'POST', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({}) })
         if (!r.ok) throw new Error('session_create_failed')
-        const s = await r.json()
-        const norm = normalizeSession(s)
-        convId = norm.id
-        setSessions((arr) => [norm, ...arr])
-        justCreatedRef.current = true
-        setActiveId(convId)
+        const s = await r.json(); const norm = normalizeSession(s)
+        convId = norm.id; setSessions((arr) => [norm, ...arr]); justCreatedRef.current = true; setActiveId(convId)
       } catch {
-        setIsStreaming(false)
-        setMessages((m) => m.map((msg) =>
-          msg.id === clientMsgId ? { ...msg, status: 'error' } : msg
-        ))
-        return
+        setIsStreaming(false); setMessages((m) => m.map((msg) => msg.id === clientMsgId ? { ...msg, status: 'error' } : msg)); return
       }
     }
-
-    send({
-      conversationId: convId,
-      content,
-      brand: brand || null,
-      attachments: (attachments || []).map((a) => ({
-        type: 'file',
-        uploadId: a.uploadId,
-        fileName: a.fileName,
-        mimeType: a.mimeType,
-        size: a.size,
-      })),
-    })
+    send({ conversationId: convId, content, attachments: (attachments || []).map((a) => ({ type: 'file', uploadId: a.uploadId, fileName: a.fileName, mimeType: a.mimeType, size: a.size })) })
   }
 
   const onCreate = async () => {
-    const r = await fetch('/api/sessions', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({}),
-    })
+    const r = await fetch('/api/sessions', { method: 'POST', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({}) })
     if (!r.ok) return
-    const s = await r.json()
-    const norm = normalizeSession(s)
-    setSessions((arr) => [norm, ...arr])
-    setActiveId(norm.id)
+    const s = await r.json(); const norm = normalizeSession(s)
+    setSessions((arr) => [norm, ...arr]); setActiveId(norm.id)
   }
 
   const onRename = async (id, title) => {
-    const r = await fetch(`/api/sessions/${id}`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ title }),
-    })
+    const r = await fetch(`/api/sessions/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title }) })
     if (!r.ok) return
     const d = await r.json().catch(() => null)
-    const newTitle = d?.title ?? title
-    setSessions((arr) => arr.map((s) => s.id === id ? { ...s, title: newTitle } : s))
+    setSessions((arr) => arr.map((s) => s.id === id ? { ...s, title: d?.title ?? title } : s))
   }
 
   const onDelete = async (id) => {
     const r = await fetch(`/api/sessions/${id}`, { method: 'DELETE', credentials: 'include' })
     if (!r.ok && r.status !== 204) return
-    setSessions((arr) => {
-      const next = arr.filter((s) => s.id !== id)
-      if (activeId === id) setActiveId(next[0]?.id ?? null)
-      return next
-    })
+    setSessions((arr) => { const n = arr.filter((s) => s.id !== id); if (activeId === id) setActiveId(n[0]?.id ?? null); return n })
   }
 
   const onOpenAdmin = () => { window.location.href = '/admin' }
   const onOpenApp = (url) => { window.open(url, '_blank', 'noopener,noreferrer') }
 
-  const hasMessages = messages.length > 0
-
   return (
     <div className="chat-root h-screen overflow-hidden flex bg-paper">
-      <Sidebar
-        sessions={sessions}
-        activeId={activeId}
-        onSelect={(id) => { setActiveId(id); setMobileOpen(false) }}
-        onCreate={onCreate}
-        onRename={onRename}
-        onDelete={onDelete}
-        isAdmin={isAdmin}
-        onOpenAdmin={onOpenAdmin}
-        currentUser={currentUser}
-        apps={apps}
-        onOpenApp={onOpenApp}
-        mobileOpen={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        onLogout={async () => {
-          await fetch('/api/auth/dev-logout', { method: 'POST', credentials: 'include' })
-          window.location.href = '/login'
-        }}
-      />
+      <Sidebar sessions={sessions} activeId={activeId} onSelect={(id) => { setActiveId(id); setMobileOpen(false) }} onCreate={onCreate} onRename={onRename} onDelete={onDelete} isAdmin={isAdmin} onOpenAdmin={onOpenAdmin} currentUser={currentUser} apps={apps} onOpenApp={onOpenApp} mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} onLogout={async () => { await fetch('/api/auth/dev-logout', { method: 'POST', credentials: 'include' }); window.location.href = '/login' }} />
       <div className="flex-1 min-h-0 h-full flex flex-col">
-        <button
-          onClick={() => setMobileOpen((v) => !v)}
-          className="md:hidden p-3 -ml-3 text-ink hover:bg-hover -mr-3"
-          aria-label="Toggle menu"
-        >
-          ☰
-        </button>
+        <button onClick={() => setMobileOpen((v) => !v)} className="md:hidden p-3 -ml-3 text-ink hover:bg-hover -mr-3" aria-label="Toggle menu">☰</button>
         <header className="shrink-0 border-b border-line px-6 py-3 text-sm text-muted bg-paper flex items-center justify-between">
-          <span>
-            {connState === 'ok' ? '已连接' :
-             connState === 'reconnecting' ? '重连中…' :
-             connState === 'failed' ? '连接失败' : '连接中…'}
-          </span>
+          <span>{connState === 'ok' ? '已连接' : connState === 'reconnecting' ? '重连中…' : connState === 'failed' ? '连接失败' : '连接中…'}</span>
           {!activeId && <span className="text-xs text-claude">点 sidebar「+ 新建」开始</span>}
         </header>
-        {!hasMessages
-          ? <EmptyState onPick={(c) => sendMessage({ content: c, brand: null })} />
-          : <MessageList messages={messages} isStreaming={isStreaming} />
-        }
+        {messages.length === 0 ? <EmptyState onPick={(c) => sendMessage({ content: c })} /> : <MessageList messages={messages} isStreaming={isStreaming} />}
         <Composer onSend={sendMessage} disabled={isStreaming || !activeId} />
       </div>
     </div>

@@ -23,6 +23,7 @@ const sidebarItems = [
   { id: 'overview', label: '概览', icon: '📊' },
   { id: 'users', label: '用户管理', icon: '👥' },
   { id: 'apps', label: '应用管理', icon: '📦' },
+  { id: 'prompts', label: '提示卡片', icon: '💬' },
 ]
 
 export default function AdminAppsPage() {
@@ -91,6 +92,7 @@ export default function AdminAppsPage() {
   const navigate = (id) => {
     if (id === 'overview') router.push('/admin')
     else if (id === 'users') router.push('/admin/users')
+    else if (id === 'prompts') router.push('/admin/prompts')
   }
 
   if (!authorized) return null

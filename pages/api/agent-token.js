@@ -24,6 +24,7 @@ export default async function handler(req, res) {
     const { token, exp } = await signAgentToken(user.id)
     return res.status(200).json({ token, exp })
   } catch (e) {
+    console.error('[agent-token] sign error:', e)
     return res.status(500).json({ error: e.message })
   }
 }

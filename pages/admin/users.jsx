@@ -9,12 +9,13 @@ import AdminButton from '../../src/components/admin/AdminButton'
 import AdminModal from '../../src/components/admin/AdminModal'
 import { getUsers, createUser, updateUser, deleteUser, resetPassword } from '../../src/lib/data'
 
-const emptyForm = { username: '', password: '', name: '', role: 'operator' }
+const emptyForm = { username: '', password: '', name: '', role: 'user' }
 
 const sidebarItems = [
   { id: 'overview', label: '概览', icon: '📊' },
   { id: 'users', label: '用户管理', icon: '👥' },
   { id: 'apps', label: '应用管理', icon: '📦' },
+  { id: 'prompts', label: '提示卡片', icon: '💬' },
 ]
 
 export default function AdminUsersPage() {
@@ -74,6 +75,7 @@ export default function AdminUsersPage() {
   const navigate = (id) => {
     if (id === 'overview') router.push('/admin')
     else if (id === 'apps') router.push('/admin/apps')
+    else if (id === 'prompts') router.push('/admin/prompts')
   }
 
   if (!authorized) return null
@@ -116,7 +118,7 @@ export default function AdminUsersPage() {
                       ? 'bg-claude/10 text-claude border-claude/30'
                       : 'bg-ink/5 text-muted border-line'
                   }`}>
-                    {user.role === 'admin' ? '管理员' : '操作员'}
+                  {user.role === 'admin' ? '管理员' : '用户'}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -136,7 +138,7 @@ export default function AdminUsersPage() {
                 <label className="block text-sm text-muted mb-1.5">角色</label>
                 <select value={form.role} onChange={(e) => setForm({...form, role: e.target.value})}
                         className="w-full px-4 py-2.5 rounded-lg border border-line bg-paper text-ink outline-none focus:border-claude/50">
-                  <option value="operator">操作员</option>
+                  <option value="user">用户</option>
                   <option value="admin">管理员</option>
                 </select>
               </div>

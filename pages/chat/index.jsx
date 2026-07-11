@@ -45,9 +45,10 @@ export default function ChatPage() {
             }
             return
           }
-          // 使用 localStorage 中的完整信息
+          // Read from cookie (set by dev-login / login page) for role info
+          const cookieSession = readCookieSession()
           setUser({ id: userFromSession?.id || sub })
-          setIsAdmin(userFromSession?.role === 'admin' || false)
+          setIsAdmin(userFromSession?.role === 'admin' || cookieSession?.role === 'admin' || false)
           setReady(true)
         })
         .catch(() => {
@@ -82,4 +83,12 @@ function parseJwtSub(token) {
   } catch {
     return null
   }
+}
+
+function readCookieSession() {
+  try {
+    const match = document.cookie.match(/(?:^|;\s*)wgd_session=([^;]+)/)
+    if (!match) return null
+    return JSON.parse(decodeURIComponent(match[1]))
+  } catch { return null }
 }
