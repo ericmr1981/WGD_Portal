@@ -226,10 +226,16 @@ export default function ChatShell({ currentUser, isAdmin }) {
     <div className="chat-root h-screen overflow-hidden flex bg-paper">
       <Sidebar sessions={sessions} activeId={activeId} onSelect={(id) => { setActiveId(id); setMobileOpen(false) }} onCreate={onCreate} onRename={onRename} onDelete={onDelete} isAdmin={isAdmin} onOpenAdmin={onOpenAdmin} currentUser={currentUser} apps={apps} onOpenApp={onOpenApp} mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} onLogout={async () => { await fetch('/api/auth/dev-logout', { method: 'POST', credentials: 'include' }); window.location.href = '/login' }} />
       <div className="flex-1 min-h-0 h-full flex flex-col">
-        <button onClick={() => setMobileOpen((v) => !v)} className="md:hidden p-3 -ml-3 text-ink hover:bg-hover -mr-3" aria-label="Toggle menu">☰</button>
-        <header className="shrink-0 border-b border-line px-6 py-3 text-sm text-muted bg-paper flex items-center justify-between">
-          <span>{connState === 'ok' ? '已连接' : connState === 'reconnecting' ? '重连中…' : connState === 'failed' ? '连接失败' : '连接中…'}</span>
-          {!activeId && <span className="text-xs text-claude">点 sidebar「+ 新建」开始</span>}
+        {/* Mobile + Tablet header */}
+        <header className="shrink-0 border-b border-line px-4 py-2.5 bg-paper flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <button onClick={() => setMobileOpen((v) => !v)} className="lg:hidden shrink-0 p-1 -ml-1 text-ink hover:bg-hover rounded" aria-label="Toggle menu">☰</button>
+            <span className="text-xs text-muted truncate">
+              <span className={`inline-block w-2 h-2 rounded-full mr-1.5 shrink-0 ${connState === 'ok' ? 'bg-green-500' : connState === 'reconnecting' ? 'bg-yellow-400' : connState === 'failed' ? 'bg-red-500' : 'bg-gray-400'}`} />
+              <span className="hidden sm:inline">{connState === 'ok' ? '已连接' : connState === 'reconnecting' ? '重连中…' : connState === 'failed' ? '连接失败' : '连接中…'}</span>
+            </span>
+          </div>
+          {!activeId && <span className="text-xs text-claude hidden sm:inline shrink-0">点「+ 新建」开始</span>}
         </header>
         {messages.length === 0 ? <EmptyState onPick={(c) => sendMessage({ content: c })} /> : <MessageList messages={messages} isStreaming={isStreaming} />}
         <Composer onSend={sendMessage} disabled={isStreaming || !activeId} />

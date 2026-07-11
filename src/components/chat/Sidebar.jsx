@@ -59,19 +59,19 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile overlay backdrop */}
+      {/* Mobile + Tablet overlay backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-ink/40 z-30 md:hidden"
+          className="fixed inset-0 bg-ink/40 z-30 lg:hidden"
           onClick={onClose}
         />
       )}
       <aside
         className={`
           w-[280px] h-screen min-h-0 bg-paper border-r border-line flex flex-col shrink-0 z-40
-          fixed md:static
+          fixed lg:static
           transition-transform duration-200
-          ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         {/* Brand + new chat */}

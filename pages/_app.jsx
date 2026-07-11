@@ -1,9 +1,13 @@
 import '../src/styles/globals.css'
 import { motion, AnimatePresence } from 'framer-motion'
+import Head from 'next/head'
 
 export default function App({ Component, pageProps, router }) {
   return (
     <>
+      <Head>
+        <link rel="manifest" href="/manifest.json" />
+      </Head>
       <AnimatePresence mode="wait">
         <motion.div
           key={router.pathname}

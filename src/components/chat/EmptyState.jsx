@@ -19,14 +19,14 @@ export default function EmptyState({ onPick }) {
   }, [])
 
   return (
-    <div className="flex-1 flex items-center justify-center px-6 bg-paper">
+    <div className="flex-1 flex items-center justify-center px-4 sm:px-6 bg-paper">
       <div className="max-w-[720px] w-full">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-claude/10 mb-4">
-            <span className="text-2xl">✦</span>
+        <div className="text-center mb-8 sm:mb-10">
+          <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-claude/10 mb-4">
+            <span className="text-xl sm:text-2xl">✦</span>
           </div>
-          <h1 className="text-2xl font-semibold text-ink mb-2">你好,有什么想问的?</h1>
-          <p className="text-muted text-sm">关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊</p>
+          <h1 className="text-xl sm:text-2xl font-semibold text-ink mb-2">你好,有什么想问的?</h1>
+          <p className="text-muted text-xs sm:text-sm">关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

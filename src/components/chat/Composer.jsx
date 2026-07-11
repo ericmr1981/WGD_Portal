@@ -141,7 +141,7 @@ export default function Composer({ onSend, disabled }) {
   const canSend = !disabled && (text.trim() || attachments.length > 0)
 
   return (
-    <div className="shrink-0 bg-paper px-4 pb-4 pt-2">
+    <div className="shrink-0 bg-paper px-3 sm:px-4 pb-3 sm:pb-4 pt-2 pb-safe">
       <div className="max-w-[720px] mx-auto">
         {oversize && (
           <p className="text-claude text-xs mb-2 px-1">内容超过 32000 字符,已截断</p>
@@ -212,8 +212,8 @@ export default function Composer({ onSend, disabled }) {
           </button>
         </div>
 
-        {/* Keyboard hint row */}
-        <div className="flex items-center justify-center gap-3 mt-2 text-[11px] text-muted">
+        {/* Keyboard hint row — hidden on mobile */}
+        <div className="hidden sm:flex items-center justify-center gap-3 mt-2 text-[11px] text-muted">
           <span><kbd className="px-1.5 py-0.5 rounded border border-line bg-paper">↵</kbd> 发送</span>
           <span><kbd className="px-1.5 py-0.5 rounded border border-line bg-paper">⇧ ↵</kbd> 换行</span>
         </div>
