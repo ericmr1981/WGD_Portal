@@ -1,74 +1,74 @@
+// src/lib/useAgentSocket.js
 import { useEffect, useRef } from 'react'
 
 export const MAX_INPUT = 32000
-const URL = process.env.NEXT_PUBLIC_AGENT_WS_URL || 'ws://localhost:4102'
 const BACKOFF_MS = [3000, 6000, 12000, 24000, 48000, 60000]
+const URL = process.env.NEXT_PUBLIC_AGENT_WS_URL || 'ws://localhost:4102'
 
-export function clampInput(text) {
-  if (text.length > MAX_INPUT) {
-    return { text: text.slice(0, MAX_INPUT), oversize: true }
-  }
-  return { text, oversize: false }
-}
-
-export function defaultUseAgentSocket({
-  onUpdate = () => {},
-  onDone = () => {},
-  onError = () => {},
+export function useAgentSocket({
+  onEvent = () => {},
   onConnectionChange = () => {},
 } = {}) {
   const wsRef = useRef(null)
   const attemptRef = useRef(0)
   const closedByUserRef = useRef(false)
-  // 等待 WS OPEN 期间入队的消息
   const pendingRef = useRef([])
+  const authedRef = useRef(false)
+  const onEventRef = useRef(onEvent)
+  const onConnRef = useRef(onConnectionChange)
 
-  const flushPending = () => {
-    const ws = wsRef.current
-    if (!ws || ws.readyState !== 1) return
-    while (pendingRef.current.length > 0) {
-      ws.send(JSON.stringify(pendingRef.current.shift()))
-    }
-  }
+  useEffect(() => { onEventRef.current = onEvent }, [onEvent])
+  useEffect(() => { onConnRef.current = onConnectionChange }, [onConnectionChange])
 
   const connect = async () => {
     try {
       const res = await fetch('/api/agent-token', { credentials: 'include' })
-      if (!res.ok) {
-        onConnectionChange('failed')
-        return
-      }
+      if (!res.ok) { onConnRef.current('failed'); return }
       const { token } = await res.json()
-      const ws = new WebSocket(`${URL}?token=${encodeURIComponent(token)}`)
+      const ws = new WebSocket(URL)
       wsRef.current = ws
+      authedRef.current = false
 
       ws.onopen = () => {
-        attemptRef.current = 0
-        onConnectionChange('ok')
-        flushPending()
+        try { ws.send(JSON.stringify({ type: 'auth', payload: { token } })) } catch {}
       }
+
       ws.onmessage = (ev) => {
-        try {
-          const data = JSON.parse(ev.data)
-          if (data.type === 'task_update') onUpdate(data.payload)
-          else if (data.type === 'task_done') onDone(data.payload)
-          else if (data.type === 'system_error') onError(data.payload)
-        } catch {
-          /* ignore bad frames */
+        let data
+        try { data = JSON.parse(ev.data) } catch { return }
+        switch (data.type) {
+          case 'hello':
+            authedRef.current = true
+            attemptRef.current = 0
+            onConnRef.current('ok')
+            const queue = pendingRef.current
+            pendingRef.current = []
+            for (const msg of queue) {
+              try { ws.send(JSON.stringify(msg)) } catch {}
+            }
+            break
+          case 'ping':
+            try { ws.send(JSON.stringify({ type: 'pong', payload: { ts: Date.now() } })) } catch {}
+            break
+          case 'pong':
+            break
+          default:
+            onEventRef.current(data)
         }
       }
-      ws.onclose = () => {
+
+      ws.onclose = (ev) => {
         if (closedByUserRef.current) return
-        onConnectionChange('reconnecting')
+        if (ev.code === 4000) { onConnRef.current('failed'); return }
+        onConnRef.current('reconnecting')
         const idx = Math.min(attemptRef.current, BACKOFF_MS.length - 1)
         attemptRef.current += 1
-        setTimeout(() => { connect() }, BACKOFF_MS[idx])
+        setTimeout(() => { if (!closedByUserRef.current) connect() }, BACKOFF_MS[idx])
       }
-      ws.onerror = () => {
-        onConnectionChange('reconnecting')
-      }
+
+      ws.onerror = () => { onConnRef.current('reconnecting') }
     } catch {
-      onConnectionChange('failed')
+      onConnRef.current('failed')
     }
   }
 
@@ -76,22 +76,28 @@ export function defaultUseAgentSocket({
     connect()
     return () => {
       closedByUserRef.current = true
-      wsRef.current?.close?.()
+      wsRef.current?.close()
+      wsRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const send = (msg) => {
+  const send = (payload) => {
+    const frame = {
+      type: 'user.message',
+      payload: {
+        ...payload,
+        messageId: payload.messageId || crypto.randomUUID(),
+      },
+    }
     const ws = wsRef.current
-    if (ws && ws.readyState === 1) {
-      ws.send(JSON.stringify(msg))
+    if (ws && ws.readyState === WebSocket.OPEN && authedRef.current) {
+      try { ws.send(JSON.stringify(frame)) } catch {}
     } else {
-      // WS 还没 OPEN(CONNECTING)或者断线重连中 — 入队等 onopen flush
-      pendingRef.current.push(msg)
+      pendingRef.current.push(frame)
     }
   }
+
   return { send }
 }
 
-export { defaultUseAgentSocket as useAgentSocket }
-export default defaultUseAgentSocket
+export default useAgentSocket
