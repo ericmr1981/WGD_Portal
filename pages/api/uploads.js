@@ -28,6 +28,21 @@ export default async function handler(req, res) {
   const result = await new Promise((resolve, reject) => {
     const files = []
     bb.on('file', (_name, stream, info) => {
+      // Browser typically sends UTF-8 bytes in the filename field but no `filename*` header,
+      // so busboy interprets them as latin1. Reinterpret as UTF-8 to recover the original name.
+      const rawName = info.filename
+      let decoded = rawName
+      try {
+        const buf = Buffer.from(rawName, 'latin1')
+        const candidate = buf.toString('utf8')
+        // Round-trip check: re-encoding utf8 → latin1 should match the original
+        if (Buffer.from(candidate, 'utf8').toString('latin1') === rawName) {
+          decoded = candidate
+        }
+      } catch {
+        /* keep original */
+      }
+      info.filename = decoded
       const chunks = []
       stream.on('data', (c) => chunks.push(c))
       stream.on('end', () => {

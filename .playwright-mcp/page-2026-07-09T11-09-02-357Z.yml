@@ -1,0 +1,54 @@
+- generic [active] [ref=f32e1]:
+  - generic [ref=f32e4]:
+    - complementary [ref=f32e5]:
+      - generic [ref=f32e6]:
+        - generic [ref=f32e7]:
+          - generic [ref=f32e8]: ✦
+          - generic [ref=f32e9]: WGD Portal
+        - button "+ 新建会话 ⌘N" [ref=f32e10] [cursor=pointer]:
+          - generic [ref=f32e11]: + 新建会话
+          - generic [ref=f32e12]: ⌘N
+      - navigation [ref=f32e13]:
+        - paragraph [ref=f32e14]: 还没有会话
+      - button "U 用户 普通用户 ⌃" [ref=f32e17] [cursor=pointer]:
+        - generic [ref=f32e18]: U
+        - generic [ref=f32e19]:
+          - generic [ref=f32e20]: 用户
+          - generic [ref=f32e21]: 普通用户
+        - generic [ref=f32e22]: ⌃
+    - generic [ref=f32e23]:
+      - banner [ref=f32e24]:
+        - generic [ref=f32e25]: 连接中…
+        - generic [ref=f32e26]: 点 sidebar「+ 新建」开始
+      - generic [ref=f32e28]:
+        - generic [ref=f32e29]:
+          - generic [ref=f32e31]: ✦
+          - heading "你好,有什么想问的?" [level=1] [ref=f32e32]
+          - paragraph [ref=f32e33]: 关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊
+        - generic [ref=f32e34]:
+          - button "📊 业绩速览 本月各品牌营收对比" [ref=f32e35] [cursor=pointer]:
+            - generic [ref=f32e36]: 📊
+            - generic [ref=f32e37]: 业绩速览
+            - generic [ref=f32e38]: 本月各品牌营收对比
+          - button "⚠️ 异常交易 查看本周风险流水" [ref=f32e39] [cursor=pointer]:
+            - generic [ref=f32e40]: ⚠️
+            - generic [ref=f32e41]: 异常交易
+            - generic [ref=f32e42]: 查看本周风险流水
+          - button "💰 账户余额 当前各账户实时余额" [ref=f32e43] [cursor=pointer]:
+            - generic [ref=f32e44]: 💰
+            - generic [ref=f32e45]: 账户余额
+            - generic [ref=f32e46]: 当前各账户实时余额
+          - button "📈 KPI 汇总 各部门实时表现" [ref=f32e47] [cursor=pointer]:
+            - generic [ref=f32e48]: 📈
+            - generic [ref=f32e49]: KPI 汇总
+            - generic [ref=f32e50]: 各部门实时表现
+      - generic [ref=f32e52]:
+        - generic [ref=f32e53]:
+          - textbox "发消息、问数据,或者上传文件…" [ref=f32e54]
+          - button "品牌 ⌄" [ref=f32e56] [cursor=pointer]
+          - button "📎" [ref=f32e58] [cursor=pointer]
+          - button "↑" [disabled] [ref=f32e59]
+        - generic [ref=f32e60]:
+          - generic [ref=f32e61]: ↵ 发送
+          - generic [ref=f32e62]: ⇧ ↵ 换行
+  - alert [ref=f32e63]

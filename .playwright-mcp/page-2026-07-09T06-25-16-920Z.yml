@@ -1,0 +1,49 @@
+- generic [active] [ref=f20e1]:
+  - generic [ref=f20e4]:
+    - complementary [ref=f20e5]:
+      - generic [ref=f20e6]:
+        - generic [ref=f20e7]:
+          - generic [ref=f20e8]: ✦
+          - generic [ref=f20e9]: WGD Portal
+        - button "+ 新建会话 ⌘N" [ref=f20e10] [cursor=pointer]:
+          - generic [ref=f20e11]: + 新建会话
+          - generic [ref=f20e12]: ⌘N
+      - navigation [ref=f20e13]:
+        - paragraph [ref=f20e14]: 还没有会话
+      - generic [ref=f20e64]:
+        - paragraph [ref=f20e65]: 应用
+        - generic [ref=f20e66]:
+          - button "产 产品库存系统" [ref=f20e67] [cursor=pointer]:
+            - generic [ref=f20e68]: 产
+            - generic [ref=f20e69]: 产品库存系统
+          - button "排 排班评估" [ref=f20e70] [cursor=pointer]:
+            - generic [ref=f20e71]: 排
+            - generic [ref=f20e72]: 排班评估
+          - button "W WDG数据门户" [ref=f20e73] [cursor=pointer]:
+            - generic [ref=f20e74]: W
+            - generic [ref=f20e75]: WDG数据门户
+          - button "蜜 蜜可诗管理后台" [ref=f20e76] [cursor=pointer]:
+            - generic [ref=f20e77]: 蜜
+            - generic [ref=f20e78]: 蜜可诗管理后台
+        - button "+ 显示全部应用 (7)" [ref=f20e79] [cursor=pointer]
+      - button "U 用户 普通用户 ⌃" [ref=f20e17] [cursor=pointer]:
+        - generic [ref=f20e18]: U
+        - generic [ref=f20e19]:
+          - generic [ref=f20e20]: 用户
+          - generic [ref=f20e21]: 普通用户
+        - generic [ref=f20e22]: ⌃
+    - generic [ref=f20e23]:
+      - banner [ref=f20e24]:
+        - generic [ref=f20e25]: 已连接
+        - generic [ref=f20e26]: 点 sidebar「+ 新建」开始
+      - generic [ref=f20e83]: 本月蜜可诗 / 旺鼎阁 / 泰柯茶园的营收分别是多少?做一张对比图
+      - generic [ref=f20e52]:
+        - generic [ref=f20e53]:
+          - textbox "发消息、问数据,或者上传文件…" [ref=f20e54]
+          - button "品牌 ⌄" [ref=f20e56] [cursor=pointer]
+          - button "📎" [ref=f20e58] [cursor=pointer]
+          - button "↑" [disabled] [ref=f20e59]
+        - generic [ref=f20e60]:
+          - generic [ref=f20e61]: ↵ 发送
+          - generic [ref=f20e62]: ⇧ ↵ 换行
+  - alert [ref=f20e63]

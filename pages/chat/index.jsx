@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { getSession } from '../../src/lib/auth'
 // 阶段 1:切到新协议 ChatShell。旧版 src/components/chat/ChatShell.jsx 保留,
 // 等联调通过后再彻底清理(详见 spec-chat-portal.md §B + alignment-and-checklist.md §4)。
-import ChatShell from '../../src/components/chat/ChatShell.tsx'
+import ChatShell from '../../src/components/chat/ChatShell.jsx'
 
 export default function ChatPage() {
   const [ready, setReady] = useState(false)

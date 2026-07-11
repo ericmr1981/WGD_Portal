@@ -6,7 +6,8 @@ const AGENT_BASE = process.env.AGENT_HTTP_URL || 'http://127.0.0.1:4101'
 async function getBearer(req) {
   const user = getCurrentUser(req)
   if (!user) return null
-  return signAgentToken(user.id).token
+  const { token } = await signAgentToken(user.id)
+  return token
 }
 
 function agentPath(req) {

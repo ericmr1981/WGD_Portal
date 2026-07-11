@@ -1,0 +1,17 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e5]:
+    - generic [ref=f9e6]:
+      - generic [ref=f9e8]: ✦
+      - heading "WGD Portal" [level=1] [ref=f9e9]
+      - paragraph [ref=f9e10]: 公司应用门户
+    - generic [ref=f9e11]:
+      - generic [ref=f9e12]:
+        - text: 账号
+        - textbox "账号" [ref=f9e13]:
+          - /placeholder: 请输入账号
+      - generic [ref=f9e14]:
+        - text: 密码
+        - textbox "密码" [ref=f9e15]:
+          - /placeholder: 请输入密码
+      - button "登 录" [ref=f9e16] [cursor=pointer]
+  - alert [ref=f9e17]

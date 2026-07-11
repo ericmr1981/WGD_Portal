@@ -1,4 +1,4 @@
-import { signAgentToken } from '../../src/lib/agent-token.ts'
+import { signAgentToken } from '../../src/lib/agent-token.js'
 
 /**
  * Helper to read wgd_session from request cookies (server-side).

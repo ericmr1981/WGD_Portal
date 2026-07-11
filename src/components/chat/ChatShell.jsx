@@ -31,7 +31,6 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const [connState, setConnState] = useState('connecting')
   const [isStreaming, setIsStreaming] = useState(false)
   const justCreatedRef = useRef(false)
-  const pendingUserMsgRef = useRef(null)
 
   // load sessions
   const loadSessions = async () => {
@@ -87,11 +86,14 @@ export default function ChatShell({ currentUser, isAdmin }) {
     switch (event.type) {
       case 'ack': {
         const ackId = event.payload?.messageId
-        if (ackId && pendingUserMsgRef.current) {
-          setMessages((prev) => prev.map((m) =>
-            m.id === pendingUserMsgRef.current ? { ...m, id: ackId, status: 'sent' } : m
-          ))
-          pendingUserMsgRef.current = null
+        if (ackId) {
+          setMessages((prev) => {
+            const idx = prev.findIndex(m => m.role === 'user' && m.status === 'pending')
+            if (idx === -1) return prev
+            const next = [...prev]
+            next[idx] = { ...next[idx], id: ackId, status: 'sent' }
+            return next
+          })
         }
         break
       }
@@ -126,12 +128,16 @@ export default function ChatShell({ currentUser, isAdmin }) {
         setMessages((prev) => {
           const next = [...prev]
           const last = next[next.length - 1]
-          if (!last || !last.content[index]) return next
+          if (!last || last.role !== 'assistant') return next
+          if (!last.content[index]) return next
           const blocks = [...last.content]
           const block = { ...blocks[index] }
           if (delta.type === 'text_delta') block.text = (block.text || '') + delta.text
           else if (delta.type === 'thinking_delta') block.thinking = (block.thinking || '') + delta.thinking
-          else if (delta.type === 'input_json_delta') block.input = (block.input || '') + delta.partial_json
+          else if (delta.type === 'input_json_delta') {
+            const base = typeof block.input === 'string' ? block.input : (block.input && Object.keys(block.input).length > 0 ? JSON.stringify(block.input) : '')
+            block.input = base + delta.partial_json
+          }
           blocks[index] = block
           next[next.length - 1] = { ...last, content: blocks }
           return next
@@ -205,11 +211,16 @@ export default function ChatShell({ currentUser, isAdmin }) {
     }
   }, [])
 
-  const { send } = useAgentSocket({ onEvent, onConnectionChange: setConnState })
+  const { send } = useAgentSocket({
+    onEvent,
+    onConnectionChange: (state) => {
+      setConnState(state)
+      if (state === 'reconnecting' || state === 'failed') setIsStreaming(false)
+    },
+  })
 
   const sendMessage = async ({ content, brand, attachments = [] }) => {
     const clientMsgId = crypto.randomUUID()
-    pendingUserMsgRef.current = clientMsgId
     setMessages((m) => [...m, {
       id: clientMsgId,
       role: 'user',

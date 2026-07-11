@@ -1,0 +1,12 @@
+[     208ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29889
+[     224ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[   13974ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783582936054}}} @ :3
+[   13974ms] [LOG] [onUpdate] {kind: step, step: Object} @ :3
+[   14032ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783582936113}}} @ :3
+[   14032ms] [LOG] [onUpdate] {kind: step, step: Object} @ :3
+[   14284ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"Claude 调用失败","ok":false,"ts":1783582936364}}} @ :3
+[   14284ms] [LOG] [onUpdate] {kind: step, step: Object} @ :3
+[   14288ms] [LOG] [WS recv] system_error {"type":"system_error","payload":{"code":"BAD_INPUT","message":"401 {\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"invalid api key\"},\"request_id\":\"069e83d81c91f526d48f5678becddfd7\"}"}} @ :3
+[   14288ms] [LOG] [onError] {code: BAD_INPUT, message: 401 {"type":"error","error":{"type":"authenticatio…,"request_id":"069e83d81c91f526d48f5678becddfd7"}} @ :3
+[   79281ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[   79564ms] [LOG] [Fast Refresh] done in 283ms @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:190

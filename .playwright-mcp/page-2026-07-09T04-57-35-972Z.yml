@@ -1,0 +1,19 @@
+- generic [active] [ref=f19e1]:
+  - generic [ref=f19e4]:
+    - banner [ref=f19e5]:
+      - generic [ref=f19e6]:
+        - generic [ref=f19e7]:
+          - generic [ref=f19e8]: ✦
+          - generic [ref=f19e9]: WGD Portal
+        - link "前往对话 →" [ref=f19e10] [cursor=pointer]:
+          - /url: /chat
+    - main [ref=f19e11]:
+      - generic [ref=f19e12]:
+        - paragraph [ref=f19e13]: APPLICATIONS
+        - heading "应用中心" [level=1] [ref=f19e14]
+        - paragraph [ref=f19e15]: 访问你日常使用的所有业务系统
+      - generic [ref=f19e16]:
+        - textbox "搜索应用…" [ref=f19e17]
+        - button "全部" [ref=f19e19] [cursor=pointer]
+      - paragraph [ref=f19e20]: 加载中…
+  - alert [ref=f19e21]

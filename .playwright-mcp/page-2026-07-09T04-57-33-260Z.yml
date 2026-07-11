@@ -1,0 +1,54 @@
+- generic [active] [ref=f18e1]:
+  - generic [ref=f18e19]:
+    - complementary [ref=f18e20]:
+      - generic [ref=f18e21]:
+        - generic [ref=f18e22]:
+          - generic [ref=f18e23]: ✦
+          - generic [ref=f18e24]: WGD Portal
+        - button "+ 新建会话 ⌘N" [ref=f18e25] [cursor=pointer]:
+          - generic [ref=f18e26]: + 新建会话
+          - generic [ref=f18e27]: ⌘N
+      - navigation [ref=f18e28]:
+        - paragraph [ref=f18e29]: 还没有会话
+      - button "U 用户 普通用户 ⌃" [ref=f18e32] [cursor=pointer]:
+        - generic [ref=f18e33]: U
+        - generic [ref=f18e34]:
+          - generic [ref=f18e35]: 用户
+          - generic [ref=f18e36]: 普通用户
+        - generic [ref=f18e37]: ⌃
+    - generic [ref=f18e38]:
+      - banner [ref=f18e39]:
+        - generic [ref=f18e40]: 已连接
+        - generic [ref=f18e41]: 点 sidebar「+ 新建」开始
+      - generic [ref=f18e43]:
+        - generic [ref=f18e44]:
+          - generic [ref=f18e46]: ✦
+          - heading "你好,有什么想问的?" [level=1] [ref=f18e47]
+          - paragraph [ref=f18e48]: 关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊
+        - generic [ref=f18e49]:
+          - button "📊 业绩速览 本月各品牌营收对比" [ref=f18e50] [cursor=pointer]:
+            - generic [ref=f18e51]: 📊
+            - generic [ref=f18e52]: 业绩速览
+            - generic [ref=f18e53]: 本月各品牌营收对比
+          - button "⚠️ 异常交易 查看本周风险流水" [ref=f18e54] [cursor=pointer]:
+            - generic [ref=f18e55]: ⚠️
+            - generic [ref=f18e56]: 异常交易
+            - generic [ref=f18e57]: 查看本周风险流水
+          - button "💰 账户余额 当前各账户实时余额" [ref=f18e58] [cursor=pointer]:
+            - generic [ref=f18e59]: 💰
+            - generic [ref=f18e60]: 账户余额
+            - generic [ref=f18e61]: 当前各账户实时余额
+          - button "📈 KPI 汇总 各部门实时表现" [ref=f18e62] [cursor=pointer]:
+            - generic [ref=f18e63]: 📈
+            - generic [ref=f18e64]: KPI 汇总
+            - generic [ref=f18e65]: 各部门实时表现
+      - generic [ref=f18e67]:
+        - generic [ref=f18e68]:
+          - textbox "发消息、问数据,或者上传文件…" [ref=f18e69]
+          - button "品牌 ⌄" [ref=f18e71] [cursor=pointer]
+          - button "📎" [ref=f18e73] [cursor=pointer]
+          - button "↑" [disabled] [ref=f18e74]
+        - generic [ref=f18e75]:
+          - generic [ref=f18e76]: ↵ 发送
+          - generic [ref=f18e77]: ⇧ ↵ 换行
+  - alert [ref=f18e17]: WGD Portal

@@ -14,6 +14,7 @@ export function useAgentSocket({
   const closedByUserRef = useRef(false)
   const pendingRef = useRef([])
   const authedRef = useRef(false)
+  const timerRef = useRef(null)
   const onEventRef = useRef(onEvent)
   const onConnRef = useRef(onConnectionChange)
 
@@ -25,6 +26,7 @@ export function useAgentSocket({
       const res = await fetch('/api/agent-token', { credentials: 'include' })
       if (!res.ok) { onConnRef.current('failed'); return }
       const { token } = await res.json()
+      if (closedByUserRef.current) return
       const ws = new WebSocket(URL)
       wsRef.current = ws
       authedRef.current = false
@@ -41,10 +43,12 @@ export function useAgentSocket({
             authedRef.current = true
             attemptRef.current = 0
             onConnRef.current('ok')
-            const queue = pendingRef.current
-            pendingRef.current = []
-            for (const msg of queue) {
-              try { ws.send(JSON.stringify(msg)) } catch {}
+            while (pendingRef.current.length > 0) {
+              const msg = pendingRef.current[0]
+              try { ws.send(JSON.stringify(msg)) } catch {
+                break // leave in queue for retry
+              }
+              pendingRef.current.shift()
             }
             break
           case 'ping':
@@ -63,7 +67,7 @@ export function useAgentSocket({
         onConnRef.current('reconnecting')
         const idx = Math.min(attemptRef.current, BACKOFF_MS.length - 1)
         attemptRef.current += 1
-        setTimeout(() => { if (!closedByUserRef.current) connect() }, BACKOFF_MS[idx])
+        timerRef.current = setTimeout(() => { if (!closedByUserRef.current) connect() }, BACKOFF_MS[idx])
       }
 
       ws.onerror = () => { onConnRef.current('reconnecting') }
@@ -76,6 +80,7 @@ export function useAgentSocket({
     connect()
     return () => {
       closedByUserRef.current = true
+      if (timerRef.current) clearTimeout(timerRef.current)
       wsRef.current?.close()
       wsRef.current = null
     }

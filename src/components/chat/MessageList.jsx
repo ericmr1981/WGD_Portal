@@ -77,7 +77,7 @@ export default function MessageList({ messages, isStreaming = false }) {
   useEffect(() => {
     const el = ref.current
     if (el) el.scrollTop = el.scrollHeight
-  }, [messages, isStreaming])
+  }, [messages.length, isStreaming])
 
   return (
     <div ref={ref} className="flex-1 min-h-0 overflow-y-auto px-6 py-8 bg-paper">

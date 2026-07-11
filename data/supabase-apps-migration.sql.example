@@ -1,0 +1,31 @@
+-- 在 Supabase SQL Editor 跑这段:创建 public.apps + 迁移 data/apps.json 的 4 条数据 + RLS
+
+CREATE TABLE IF NOT EXISTS public.apps (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  url TEXT NOT NULL,
+  category TEXT NOT NULL,
+  icon TEXT,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 从 data/apps.json 迁 4 条(保持 ID 不变,避免外链失效)
+INSERT INTO public.apps (id, name, description, url, category, icon, sort_order) VALUES
+  ('mks-admin', '蜜可诗管理后台', '蜜可诗门店运营数据', 'https://mks.example.com', '蜜可诗', '🛍️', 10),
+  ('wdg-pos',    '旺鼎阁 POS',     '旺鼎阁门店收银系统', 'https://pos.example.com', '旺鼎阁', '🍽️', 20),
+  ('tkc-farm',   '泰柯茶园管理',   '茶园种植与库存',     'https://tkc.example.com', '泰柯茶园', '🍵', 30),
+  ('finance',    '财务看板',       '集团统一财务数据',   'https://finance.example.com', '集团', '📊', 40)
+ON CONFLICT (id) DO NOTHING;
+
+-- 启用 RLS
+ALTER TABLE public.apps ENABLE ROW LEVEL SECURITY;
+
+-- 策略:anon / authenticated 都可读
+DROP POLICY IF EXISTS "apps_read_all" ON public.apps;
+CREATE POLICY "apps_read_all" ON public.apps
+  FOR SELECT
+  USING (true);
+
+-- 写入策略:只有 admin role 能写(暂时不实现,等 admin 写后台时再加)

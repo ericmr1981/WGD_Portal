@@ -1,0 +1,60 @@
+- generic [active] [ref=f26e1]:
+  - generic [ref=f26e4]:
+    - complementary [ref=f26e5]:
+      - generic [ref=f26e6]:
+        - generic [ref=f26e7]:
+          - generic [ref=f26e8]: ✦
+          - generic [ref=f26e9]: WGD Portal
+        - button "+ 新建会话 ⌘N" [ref=f26e10] [cursor=pointer]:
+          - generic [ref=f26e11]: + 新建会话
+          - generic [ref=f26e12]: ⌘N
+      - navigation [ref=f26e13]:
+        - generic [ref=f26e15]:
+          - generic [ref=f26e16]: 今天
+          - generic [ref=f26e17]:
+            - generic [ref=f26e19] [cursor=pointer]: 新会话
+            - generic [ref=f26e21] [cursor=pointer]: 新会话
+            - generic [ref=f26e23] [cursor=pointer]: 新会话
+            - generic [ref=f26e25] [cursor=pointer]: 测试会话
+      - button "U 用户 普通用户 ⌃" [ref=f26e28] [cursor=pointer]:
+        - generic [ref=f26e29]: U
+        - generic [ref=f26e30]:
+          - generic [ref=f26e31]: 用户
+          - generic [ref=f26e32]: 普通用户
+        - generic [ref=f26e33]: ⌃
+    - generic [ref=f26e34]:
+      - banner [ref=f26e35]:
+        - generic [ref=f26e36]: 连接中…
+        - generic [ref=f26e37]: 点 sidebar「+ 新建」开始
+      - generic [ref=f26e39]:
+        - generic [ref=f26e40]:
+          - generic [ref=f26e42]: ✦
+          - heading "你好,有什么想问的?" [level=1] [ref=f26e43]
+          - paragraph [ref=f26e44]: 关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊
+        - generic [ref=f26e45]:
+          - button "📊 业绩速览 本月各品牌营收对比" [ref=f26e46] [cursor=pointer]:
+            - generic [ref=f26e47]: 📊
+            - generic [ref=f26e48]: 业绩速览
+            - generic [ref=f26e49]: 本月各品牌营收对比
+          - button "⚠️ 异常交易 查看本周风险流水" [ref=f26e50] [cursor=pointer]:
+            - generic [ref=f26e51]: ⚠️
+            - generic [ref=f26e52]: 异常交易
+            - generic [ref=f26e53]: 查看本周风险流水
+          - button "💰 账户余额 当前各账户实时余额" [ref=f26e54] [cursor=pointer]:
+            - generic [ref=f26e55]: 💰
+            - generic [ref=f26e56]: 账户余额
+            - generic [ref=f26e57]: 当前各账户实时余额
+          - button "📈 KPI 汇总 各部门实时表现" [ref=f26e58] [cursor=pointer]:
+            - generic [ref=f26e59]: 📈
+            - generic [ref=f26e60]: KPI 汇总
+            - generic [ref=f26e61]: 各部门实时表现
+      - generic [ref=f26e63]:
+        - generic [ref=f26e64]:
+          - textbox "发消息、问数据,或者上传文件…" [ref=f26e65]
+          - button "品牌 ⌄" [ref=f26e67] [cursor=pointer]
+          - button "📎" [ref=f26e69] [cursor=pointer]
+          - button "↑" [disabled] [ref=f26e70]
+        - generic [ref=f26e71]:
+          - generic [ref=f26e72]: ↵ 发送
+          - generic [ref=f26e73]: ⇧ ↵ 换行
+  - alert [ref=f26e74]

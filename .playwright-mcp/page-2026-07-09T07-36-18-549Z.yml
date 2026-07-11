@@ -1,0 +1,57 @@
+- generic [active] [ref=f25e1]:
+  - generic [ref=f25e4]:
+    - complementary [ref=f25e5]:
+      - generic [ref=f25e6]:
+        - generic [ref=f25e7]:
+          - generic [ref=f25e8]: ✦
+          - generic [ref=f25e9]: WGD Portal
+        - button "+ 新建会话 ⌘N" [ref=f25e10] [cursor=pointer]:
+          - generic [ref=f25e11]: + 新建会话
+          - generic [ref=f25e12]: ⌘N
+      - navigation [ref=f25e13]:
+        - generic [ref=f25e14]:
+          - generic [ref=f25e15]:
+            - generic [ref=f25e16]: 今天
+            - generic [ref=f25e17]:
+              - generic [ref=f25e19] [cursor=pointer]: 新会话
+              - generic [ref=f25e21] [cursor=pointer]: 新会话
+              - generic [ref=f25e23] [cursor=pointer]: 测试会话
+          - generic [ref=f25e89]:
+            - generic [ref=f25e90]: 更早
+            - generic [ref=f25e93] [cursor=pointer]: 新会话
+      - generic [ref=f25e73]:
+        - paragraph [ref=f25e74]: 应用
+        - generic [ref=f25e75]:
+          - button "产 产品库存系统" [ref=f25e76] [cursor=pointer]:
+            - generic [ref=f25e77]: 产
+            - generic [ref=f25e78]: 产品库存系统
+          - button "排 排班评估" [ref=f25e79] [cursor=pointer]:
+            - generic [ref=f25e80]: 排
+            - generic [ref=f25e81]: 排班评估
+          - button "W WDG数据门户" [ref=f25e82] [cursor=pointer]:
+            - generic [ref=f25e83]: W
+            - generic [ref=f25e84]: WDG数据门户
+          - button "蜜 蜜可诗管理后台" [ref=f25e85] [cursor=pointer]:
+            - generic [ref=f25e86]: 蜜
+            - generic [ref=f25e87]: 蜜可诗管理后台
+        - button "+ 显示全部应用 (7)" [ref=f25e88] [cursor=pointer]
+      - button "U 用户 普通用户 ⌃" [ref=f25e26] [cursor=pointer]:
+        - generic [ref=f25e27]: U
+        - generic [ref=f25e28]:
+          - generic [ref=f25e29]: 用户
+          - generic [ref=f25e30]: 普通用户
+        - generic [ref=f25e31]: ⌃
+    - generic [ref=f25e32]:
+      - banner [ref=f25e33]:
+        - generic [ref=f25e34]: 已连接
+      - generic [ref=f25e97]: 本周银行流水里有哪些待处理风险?列出来
+      - generic [ref=f25e61]:
+        - generic [ref=f25e62]:
+          - textbox "发消息、问数据,或者上传文件…" [ref=f25e63]
+          - button "品牌 ⌄" [ref=f25e65] [cursor=pointer]
+          - button "📎" [ref=f25e67] [cursor=pointer]
+          - button "↑" [disabled] [ref=f25e68]
+        - generic [ref=f25e69]:
+          - generic [ref=f25e70]: ↵ 发送
+          - generic [ref=f25e71]: ⇧ ↵ 换行
+  - alert [ref=f25e72]

@@ -1,43 +1,40 @@
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-const iconColors = {
-  github: 'from-blue-500 to-cyan-400',
-  jira: 'from-neon-purple to-purple-400',
-  slack: 'from-pink-500 to-rose-400',
-  datadog: 'from-amber-500 to-red-400',
-  default: 'from-neon-cyan to-neon-purple',
+// 取首字符用于 chip 显示
+// "蜜可诗管理后台" → "蜜"  "Roster App" → "R"
+function firstChar(name = '') {
+  const cleaned = String(name).replace(/(系统|后台|管理|看板)$/, '')
+  const c = cleaned.trim().charAt(0)
+  if (!c) return '·'
+  return /[一-龥]/.test(c) ? c : c.toUpperCase()
 }
 
-const iconLetters = {
-  github: 'G',
-  jira: 'J',
-  slack: 'S',
-  datadog: 'D',
-}
+export default function AppCard({ app, index = 0 }) {
+  const ch = firstChar(app?.name)
+  const href = app?.id ? `/launch/${app.id}` : '#'
 
-export default function AppCard({ app, index }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+    <Link
+      href={href}
+      style={{ animationDelay: `${index * 30}ms` }}
+      className="group flex items-start gap-3 p-4 rounded-xl border border-line bg-paper
+                 hover:bg-hover hover:border-claude/40 transition-colors animate-[fadeIn_0.25s_ease-out_both]"
     >
-      <Link
-        href={`/launch/${app.id}`}
-        className="glass glass-card p-5 block group cursor-pointer"
-      >
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${iconColors[app.icon] || iconColors.default}
-                        flex items-center justify-center text-white font-bold text-lg mb-3
-                        group-hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-shadow duration-300`}>
-          {iconLetters[app.icon] || app.name.charAt(0)}
-        </div>
-        <h3 className="text-white font-semibold text-sm mb-1 group-hover:text-neon-cyan transition-colors">
-          {app.name}
+      <span className="shrink-0 w-9 h-9 rounded-lg bg-claude/15 text-claude text-base font-medium
+                       flex items-center justify-center
+                       group-hover:bg-claude/25 transition-colors">
+        {ch}
+      </span>
+      <div className="flex-1 min-w-0">
+        <h3 className="text-sm font-medium text-ink truncate group-hover:text-claude transition-colors">
+          {app?.name}
         </h3>
-        <p className="text-gray-500 text-xs leading-relaxed">{app.description}</p>
-      </Link>
-    </motion.div>
+        {app?.description && (
+          <p className="mt-0.5 text-xs text-muted line-clamp-2 leading-relaxed">
+            {app.description}
+          </p>
+        )}
+      </div>
+    </Link>
   )
 }

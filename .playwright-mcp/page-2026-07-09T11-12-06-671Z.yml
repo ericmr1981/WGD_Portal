@@ -1,0 +1,67 @@
+- generic [active] [ref=f34e1]:
+  - generic [ref=f34e4]:
+    - complementary [ref=f34e5]:
+      - generic [ref=f34e6]:
+        - generic [ref=f34e7]:
+          - generic [ref=f34e8]: ✦
+          - generic [ref=f34e9]: WGD Portal
+        - button "+ 新建会话 ⌘N" [ref=f34e10] [cursor=pointer]:
+          - generic [ref=f34e11]: + 新建会话
+          - generic [ref=f34e12]: ⌘N
+      - navigation [ref=f34e13]:
+        - generic [ref=f34e15]:
+          - generic [ref=f34e16]: 今天
+          - generic [ref=f34e17]:
+            - generic [ref=f34e19] [cursor=pointer]: 新会话
+            - generic [ref=f34e21] [cursor=pointer]: 新会话
+            - generic [ref=f34e23] [cursor=pointer]: 新会话
+            - generic [ref=f34e25] [cursor=pointer]: 新会话
+            - generic [ref=f34e27] [cursor=pointer]: portal-format-test
+            - generic [ref=f34e29] [cursor=pointer]: 新会话
+            - generic [ref=f34e31] [cursor=pointer]: 新会话
+            - generic [ref=f34e33] [cursor=pointer]: 新会话
+            - generic [ref=f34e35] [cursor=pointer]: 新会话
+            - generic [ref=f34e37] [cursor=pointer]: 新会话
+            - generic [ref=f34e39] [cursor=pointer]: 测试会话
+      - button "U 用户 普通用户 ⌃" [ref=f34e42] [cursor=pointer]:
+        - generic [ref=f34e43]: U
+        - generic [ref=f34e44]:
+          - generic [ref=f34e45]: 用户
+          - generic [ref=f34e46]: 普通用户
+        - generic [ref=f34e47]: ⌃
+    - generic [ref=f34e48]:
+      - banner [ref=f34e49]:
+        - generic [ref=f34e50]: 重连中…
+        - generic [ref=f34e51]: 点 sidebar「+ 新建」开始
+      - generic [ref=f34e53]:
+        - generic [ref=f34e54]:
+          - generic [ref=f34e56]: ✦
+          - heading "你好,有什么想问的?" [level=1] [ref=f34e57]
+          - paragraph [ref=f34e58]: 关于蜜可诗 / 旺鼎阁 / 泰柯茶园的数据,都可以聊
+        - generic [ref=f34e59]:
+          - button "📊 业绩速览 本月各品牌营收对比" [ref=f34e60] [cursor=pointer]:
+            - generic [ref=f34e61]: 📊
+            - generic [ref=f34e62]: 业绩速览
+            - generic [ref=f34e63]: 本月各品牌营收对比
+          - button "⚠️ 异常交易 查看本周风险流水" [ref=f34e64] [cursor=pointer]:
+            - generic [ref=f34e65]: ⚠️
+            - generic [ref=f34e66]: 异常交易
+            - generic [ref=f34e67]: 查看本周风险流水
+          - button "💰 账户余额 当前各账户实时余额" [ref=f34e68] [cursor=pointer]:
+            - generic [ref=f34e69]: 💰
+            - generic [ref=f34e70]: 账户余额
+            - generic [ref=f34e71]: 当前各账户实时余额
+          - button "📈 KPI 汇总 各部门实时表现" [ref=f34e72] [cursor=pointer]:
+            - generic [ref=f34e73]: 📈
+            - generic [ref=f34e74]: KPI 汇总
+            - generic [ref=f34e75]: 各部门实时表现
+      - generic [ref=f34e77]:
+        - generic [ref=f34e78]:
+          - textbox "发消息、问数据,或者上传文件…" [ref=f34e79]
+          - button "品牌 ⌄" [ref=f34e81] [cursor=pointer]
+          - button "📎" [ref=f34e83] [cursor=pointer]
+          - button "↑" [disabled] [ref=f34e84]
+        - generic [ref=f34e85]:
+          - generic [ref=f34e86]: ↵ 发送
+          - generic [ref=f34e87]: ⇧ ↵ 换行
+  - alert [ref=f34e88]

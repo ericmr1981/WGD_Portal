@@ -1,0 +1,8 @@
+[     188ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29889
+[     204ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[   10179ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783582867513}}} @ :6
+[   10217ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783582867551}}} @ :6
+[   10477ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"Claude 调用失败","ok":false,"ts":1783582867810}}} @ :6
+[   10482ms] [LOG] [WS recv] system_error {"type":"system_error","payload":{"code":"BAD_INPUT","message":"401 {\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"invalid api key\"},\"request_id\":\"069e8393a66e243d9f2bef045f8d4664\"}"}} @ :6
+[   61254ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[   61521ms] [LOG] [Fast Refresh] done in 268ms @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:190

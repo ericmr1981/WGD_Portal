@@ -1,0 +1,22 @@
+[     199ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29889
+[     216ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[   13501ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783595825968}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   13501ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   13556ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783595826024}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   13557ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   13563ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783595826031}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   13563ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   13563ms] [LOG] [WS recv] task_done {"type":"task_done","payload":{"content":"","steps":[{"phase":"persisted","label":"已加载会话历史","ts":1783595825968},{"phase":"thinking","label":"准备调用 Claude","ts":1783595826024},{"phase":"persisted","label":"已保存回复","ts":1783595826031}]}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   13563ms] [LOG] [onDone] {content: , steps: Array(3)} @ webpack-internal:///./src/components/chat/ChatShell.jsx:129
+[   16279ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783595828735}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   16280ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   16292ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783595828759}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   16292ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   16295ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783595828764}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   16295ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   16298ms] [LOG] [WS recv] task_done {"type":"task_done","payload":{"content":"","steps":[{"phase":"persisted","label":"已加载会话历史","ts":1783595828735},{"phase":"thinking","label":"准备调用 Claude","ts":1783595828759},{"phase":"persisted","label":"已保存回复","ts":1783595828764}]}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   16298ms] [LOG] [onDone] {content: , steps: Array(3)} @ webpack-internal:///./src/components/chat/ChatShell.jsx:129
+[  155729ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  155959ms] [LOG] [Fast Refresh] done in 229ms @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:190
+[  163863ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  164006ms] [LOG] [Fast Refresh] done in 143ms @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:190

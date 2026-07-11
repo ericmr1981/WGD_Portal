@@ -6,7 +6,7 @@ const AGENT_BASE = process.env.AGENT_HTTP_URL || 'http://127.0.0.1:4101'
 export default async function handler(req, res) {
   const user = getCurrentUser(req)
   if (!user) return res.status(401).json({ error: 'unauthorized' })
-  const token = signAgentToken(user.id).token
+  const token = (await signAgentToken(user.id)).token
 
   const hasBody = ['POST', 'PATCH', 'PUT'].includes(req.method)
   const init = {

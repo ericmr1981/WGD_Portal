@@ -1,0 +1,19 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - heading "WGD Portal" [level=1] [ref=e7]
+      - paragraph [ref=e8]: 公司应用门户
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - text: 账号
+        - textbox "账号" [ref=e11]:
+          - /placeholder: 请输入账号
+          - text: admin
+      - generic [ref=e12]:
+        - text: 密码
+        - textbox "密码" [ref=e13]:
+          - /placeholder: 请输入密码
+          - text: admin123
+      - paragraph [ref=e16]: 账号或密码错误
+      - button "登 录" [ref=e14] [cursor=pointer]
+  - alert [ref=e15]

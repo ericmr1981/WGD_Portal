@@ -1,0 +1,218 @@
+[     217ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29889
+[     237ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[   10132ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783583015682}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   10133ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   10198ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783583015749}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   10198ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   10423ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"Claude 调用失败","ok":false,"ts":1783583015974}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   10423ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[   10426ms] [LOG] [WS recv] system_error {"type":"system_error","payload":{"code":"BAD_INPUT","message":"401 {\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"invalid api key\"},\"request_id\":\"069e8427f058385c09698f02b79e9848\"}"}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[   10426ms] [LOG] [onError] {code: BAD_INPUT, message: 401 {"type":"error","error":{"type":"authenticatio…,"request_id":"069e8427f058385c09698f02b79e9848"}} @ webpack-internal:///./src/components/chat/ChatShell.jsx:147
+[  201439ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783583206962}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[  201439ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[  201486ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783583207012}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[  201486ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[  201627ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"Claude 调用失败","ok":false,"ts":1783583207152}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[  201627ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1110774ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783584116338}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1110775ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1110869ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783584116434}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1110869ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1115217ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 1)","ts":1783584120783}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1115217ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1115223ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783584120788}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1115223ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1136083ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783584141654}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1136083ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1136120ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783584141693}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1136120ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1141446ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_multi_store」","tool":"query_tamkoko_sales_multi_store","ts":1783584147020}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1141447ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1141483ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_multi_store」返回 成功","tool":"query_tamkoko_sales_multi_store","ok":true,"ts":1783584147058}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1141484ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1144078ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「get_brand_stores」","tool":"get_brand_stores","ts":1783584149653}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1144078ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1144130ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「get_brand_stores」返回 成功","tool":"get_brand_stores","ok":true,"ts":1783584149706}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1144130ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1147315ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_store_report_snapshot」","tool":"query_store_report_snapshot","ts":1783584152890}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1147315ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1147353ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_store_report_snapshot」返回 失败","tool":"query_store_report_snapshot","ok":false,"ts":1783584152930}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1147354ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1147357ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_store_report_snapshot」","tool":"query_store_report_snapshot","ts":1783584152931}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1147357ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1147369ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_store_report_snapshot」返回 失败","tool":"query_store_report_snapshot","ok":false,"ts":1783584152946}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1147369ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1149833ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783584155411}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1149833ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1149841ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 失败","tool":"query_tamkoko_sales_overview","ok":false,"ts":1783584155419}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1149841ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1149845ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783584155419}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1149845ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1149859ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 失败","tool":"query_tamkoko_sales_overview","ok":false,"ts":1783584155434}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1149859ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1152711ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783584158288}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1152711ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1152727ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 成功","tool":"query_tamkoko_sales_overview","ok":true,"ts":1783584158305}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1152727ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1152729ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783584158305}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1152729ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1152755ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 成功","tool":"query_tamkoko_sales_overview","ok":true,"ts":1783584158332}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1152755ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1154990ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_overview」","tool":"query_financial_overview","ts":1783584160471}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1154990ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1155075ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_overview」返回 成功","tool":"query_financial_overview","ok":true,"ts":1783584160558}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1155075ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1158516ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"准备加载 skill「wdg-data-platform」","tool":"load_skill","toolName":"wdg-data-platform","ts":1783584164027}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1158516ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1158524ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"加载 skill「wdg-data-platform」 (3792 bytes)","tool":"load_skill","toolName":"wdg-data-platform","ok":true,"ts":1783584164028}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1158524ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1161282ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_trend」","tool":"query_tamkoko_sales_trend","ts":1783584166806}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1161282ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1161304ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_trend」返回 成功","tool":"query_tamkoko_sales_trend","ok":true,"ts":1783584166830}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1161304ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1161307ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_trend」","tool":"query_tamkoko_sales_trend","ts":1783584166830}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1161307ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1161319ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_trend」返回 成功","tool":"query_tamkoko_sales_trend","ok":true,"ts":1783584166846}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1161319ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1164328ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_overview」","tool":"query_financial_overview","ts":1783584169867}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1164328ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1164379ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_overview」返回 成功","tool":"query_financial_overview","ok":true,"ts":1783584169919}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1164379ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1164381ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_overview」","tool":"query_financial_overview","ts":1783584169919}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1164381ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1164408ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_overview」返回 成功","tool":"query_financial_overview","ok":true,"ts":1783584169948}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1164408ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1168982ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 10)","ts":1783584174533}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1168982ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1168989ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783584174541}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[ 1168989ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[ 1182290ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[ 2118211ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[10863306ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783593868805}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10863308ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10863391ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783593868897}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10863391ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10867325ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 1)","ts":1783593872875}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10867325ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10867331ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783593872878}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10867331ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10932587ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783593938067}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10932588ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10932649ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783593938131}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10932649ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10935594ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_store_report_snapshot」","tool":"query_store_report_snapshot","ts":1783593941077}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10935594ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10935639ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_store_report_snapshot」返回 失败","tool":"query_store_report_snapshot","ok":false,"ts":1783593941123}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10935639ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10938697ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_overview」","tool":"query_financial_overview","ts":1783593944225}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10938697ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10938800ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_overview」返回 成功","tool":"query_financial_overview","ok":true,"ts":1783593944330}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10938800ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10943093ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 3)","ts":1783593948679}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10943093ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10943125ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783593948682}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10943125ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10961081ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783593966561}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10961081ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10961106ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783593966587}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10961106ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10965632ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「get_qimai_entry_rate」","tool":"get_qimai_entry_rate","ts":1783593971114}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10965632ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10965746ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「get_qimai_entry_rate」返回 成功","tool":"get_qimai_entry_rate","ok":true,"ts":1783593971231}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10965747ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10973653ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 2)","ts":1783593979207}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10973653ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[10973656ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783593979209}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[10973656ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11009199ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783594014764}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11009199ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11009244ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783594014810}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11009244ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11011788ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「get_qimai_entry_rate」","tool":"get_qimai_entry_rate","ts":1783594017366}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11011788ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11011949ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「get_qimai_entry_rate」返回 成功","tool":"get_qimai_entry_rate","ok":true,"ts":1783594017530}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11011950ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11018678ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 2)","ts":1783594024280}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11018678ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11018688ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783594024283}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11018688ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11911382ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783594916956}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11911384ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11911456ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783594917032}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11911456ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11914842ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「get_brand_stores」","tool":"get_brand_stores","ts":1783594920419}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11914842ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11914876ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「get_brand_stores」返回 成功","tool":"get_brand_stores","ok":true,"ts":1783594920454}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11914876ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11914879ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_payment_metrics」","tool":"query_payment_metrics","ts":1783594920454}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11914879ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11914907ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_payment_metrics」返回 成功","tool":"query_payment_metrics","ok":true,"ts":1783594920483}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11914907ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11920005ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_statement」","tool":"query_financial_statement","ts":1783594925582}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11920005ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11920025ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_statement」返回 成功","tool":"query_financial_statement","ok":true,"ts":1783594925603}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11920025ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11928189ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 3)","ts":1783594933711}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11928189ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[11928194ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783594933717}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[11928194ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12049455ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783595055008}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12049456ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12049531ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783595055085}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12049531ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12052423ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「get_brand_stores」","tool":"get_brand_stores","ts":1783595057975}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12052423ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12052464ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「get_brand_stores」返回 成功","tool":"get_brand_stores","ok":true,"ts":1783595058016}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12052464ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12055244ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 2)","ts":1783595060794}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12055244ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12055249ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783595060798}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12055249ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12264498ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783595270027}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12264499ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12264560ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783595270092}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12264561ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12267173ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_store_report_snapshot」","tool":"query_store_report_snapshot","ts":1783595272703}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12267174ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12267205ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_store_report_snapshot」返回 失败","tool":"query_store_report_snapshot","ok":false,"ts":1783595272736}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12267205ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12269917ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_store_report_snapshot」","tool":"query_store_report_snapshot","ts":1783595275448}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12269917ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12269927ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_store_report_snapshot」返回 失败","tool":"query_store_report_snapshot","ok":false,"ts":1783595275457}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12269927ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12273624ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_overview」","tool":"query_financial_overview","ts":1783595279153}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12273625ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12273783ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_overview」返回 成功","tool":"query_financial_overview","ok":true,"ts":1783595279312}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12273783ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12273785ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783595279312}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12273785ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12273790ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 失败","tool":"query_tamkoko_sales_overview","ok":false,"ts":1783595279320}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12273790ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12276688ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 4)","ts":1783595282217}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12276688ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12276694ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783595282222}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12276694ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12293423ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已加载会话历史","ts":1783595298946}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12293424ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12293495ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"thinking","label":"准备调用 Claude","ts":1783595299022}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12293495ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12297625ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783595303152}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12297625ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12297636ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 失败","tool":"query_tamkoko_sales_overview","ok":false,"ts":1783595303162}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12297636ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12297638ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_financial_overview」","tool":"query_financial_overview","ts":1783595303163}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12297639ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12297755ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_financial_overview」返回 成功","tool":"query_financial_overview","ok":true,"ts":1783595303282}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12297755ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12301223ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_tamkoko_sales_overview」","tool":"query_tamkoko_sales_overview","ts":1783595306749}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12301223ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12301235ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_tamkoko_sales_overview」返回 成功","tool":"query_tamkoko_sales_overview","ok":true,"ts":1783595306762}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12301235ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12301237ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_call","label":"调用工具「query_store_report_snapshot」","tool":"query_store_report_snapshot","ts":1783595306762}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12301237ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12301249ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"tool_result","label":"工具「query_store_report_snapshot」返回 失败","tool":"query_store_report_snapshot","ok":false,"ts":1783595306776}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12301249ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12304289ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"complete","label":"Claude 已生成回复 (iter 3)","ts":1783595309815}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12304289ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120
+[12304293ms] [LOG] [WS recv] task_update {"type":"task_update","payload":{"kind":"step","step":{"phase":"persisted","label":"已保存回复","ts":1783595309819}}} @ webpack-internal:///./src/lib/useAgentSocket.js:68
+[12304294ms] [LOG] [onUpdate] {kind: step, step: Object} @ webpack-internal:///./src/components/chat/ChatShell.jsx:120

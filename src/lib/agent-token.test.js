@@ -1,31 +1,35 @@
-import { describe, it, expect, beforeAll } from 'vitest'
-import jwt from 'jsonwebtoken'
+import { describe, it, expect } from 'vitest'
+import { jwtVerify } from 'jose'
 
-beforeAll(() => {
-  process.env.SUPABASE_JWT_SECRET = 'unit-test-secret'
-})
-
-describe('signAgentToken', () => {
-  it('returns a HS256 token containing sub and exp', async () => {
-    const { signAgentToken } = await import('./agent-token.js')
-    const { token, exp } = signAgentToken('user-123')
+describe('signAgentToken (RS256)', () => {
+  it('returns an RS256 token containing sub and exp', async () => {
+    const { signAgentToken, getAgentJWKS } = await import('./agent-token.ts')
+    const { token, exp } = await signAgentToken('user-123')
     expect(token).toBeTruthy()
-    const decoded = jwt.verify(token, 'unit-test-secret', { algorithms: ['HS256'] })
-    expect(decoded.sub).toBe('user-123')
-    expect(decoded.exp).toBe(exp)
-  })
-
-  it('throws when SUPABASE_JWT_SECRET is missing', async () => {
-    const original = process.env.SUPABASE_JWT_SECRET
-    delete process.env.SUPABASE_JWT_SECRET
-    const { signAgentToken } = await import('./agent-token.js?v=missing')
-    expect(() => signAgentToken('user-x')).toThrow(/SUPABASE_JWT_SECRET/)
-    process.env.SUPABASE_JWT_SECRET = original
+    const jwks = await getAgentJWKS()
+    const key = await importJWK(jwks.keys[0], 'RS256')
+    const { payload } = await jwtVerify(token, key, { algorithms: ['RS256'] })
+    expect(payload.sub).toBe('user-123')
+    expect(payload.exp).toBe(exp)
   })
 
   it('throws when userId is empty', async () => {
-    const { signAgentToken } = await import('./agent-token.js?v=uid')
-    expect(() => signAgentToken('')).toThrow(/userId/)
-    expect(() => signAgentToken(null)).toThrow(/userId/)
+    const { signAgentToken } = await import('./agent-token.ts')
+    await expect(signAgentToken('')).rejects.toThrow(/userId/)
+    await expect(signAgentToken(null as any)).rejects.toThrow(/userId/)
+  })
+
+  it('exposes a JWKS with RS256 public key', async () => {
+    const { getAgentJWKS } = await import('./agent-token.ts')
+    const jwks = await getAgentJWKS()
+    expect(jwks.keys).toBeInstanceOf(Array)
+    expect(jwks.keys.length).toBeGreaterThan(0)
+    expect(jwks.keys[0].kty).toBe('RSA')
+    expect(jwks.keys[0].alg).toBe('RS256')
+    expect(jwks.keys[0].use).toBe('sig')
+    expect(typeof jwks.keys[0].kid).toBe('string')
   })
 })
+
+// 需要 importJWK 的 ES import 在顶层
+import { importJWK } from 'jose'

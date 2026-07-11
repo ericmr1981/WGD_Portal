@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { supabase } from '../src/lib/supabase'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -14,23 +15,23 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      // Call new auth API
-      const r = await fetch('/api/auth/auth', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ username, password }),
+      // 直接调 Supabase RPC 验证密码(走 public.users + bcrypt)
+      const { data, error: rpcErr } = await supabase.rpc('login_user', {
+        p_username: username,
+        p_password: password,
       })
-      if (!r.ok) {
-        throw new Error('登录失败')
+      if (rpcErr) throw rpcErr
+      if (!data?.success) {
+        setError(data?.error || '账号或密码错误')
+        setLoading(false)
+        return
       }
-      const data = await r.json()
-      // Set wgd_session cookie for backward compatibility with /api/sessions routes
+      const user = data.user
       const session = {
-        id: data.user.id,
-        username: data.user.username,
-        name: data.user.username,
-        role: data.user.role,
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        role: user.role,
       }
       // 写 localStorage (供 admin 页 getSession 使用) + cookie (供 middleware + API getCurrentUser 使用)
       localStorage.setItem('wgd_session', JSON.stringify(session))
@@ -38,8 +39,9 @@ export default function LoginPage() {
       document.cookie = `wgd_session=${encoded}; path=/; SameSite=Lax; max-age=604800`
       const dest = typeof router.query.from === 'string' ? router.query.from : '/chat'
       router.push(dest)
-    } catch {
-      setError('账号或密码错误')
+    } catch (err) {
+      console.error('Login error:', err)
+      setError(`登录失败:${err.message || '网络错误'}`)
     }
     setLoading(false)
   }
@@ -48,6 +50,9 @@ export default function LoginPage() {
     <div className="chat-root min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-sm bg-paper border border-line rounded-2xl shadow-sm p-8 sm:p-10">
         <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-claude/10 mb-3">
+            <span className="text-claude text-xl">✦</span>
+          </div>
           <h1 className="text-2xl font-semibold text-ink">WGD Portal</h1>
           <p className="text-muted text-sm mt-1">公司应用门户</p>
         </div>
@@ -61,6 +66,7 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="请输入账号"
+              autoComplete="username"
             />
           </label>
           <label className="block">
@@ -72,6 +78,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="请输入密码"
+              autoComplete="current-password"
             />
           </label>
 

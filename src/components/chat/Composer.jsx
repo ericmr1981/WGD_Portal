@@ -9,6 +9,7 @@ function clampInput(content) {
   const MAX_CHARS = 8000
   if (content.length <= MAX_CHARS) return content
   return content.slice(0, MAX_CHARS) + '\n…(截断)'
+}
 
 // 单个附件 chip — 显示文件名 + 大小
 function AttachmentChip({ file, onRemove }) {
@@ -133,12 +134,12 @@ export default function Composer({ onSend, disabled }) {
     const { text: finalText, oversize } = finalContent.length > 8000
       ? { text: finalContent.slice(0, 8000) + '\n…(截断)', oversize: true }
       : { text: finalContent, oversize: false }
-    setOversize(o)
+    setOversize(oversize)
 
     // attachments 字段仍然保留 uploadId 引用(未来 agent 支持了可以直接 fetch)
     // 但当前对 agent 来说,文件内容已经在 content 里
     onSend({
-      content: clamped,
+      content: finalText,
       brand: brand || null,
       attachments: attachments.map((a) => ({
         type: 'file',
