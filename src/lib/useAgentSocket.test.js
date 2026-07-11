@@ -2,7 +2,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
 
-// mock global WebSocket
 class FakeWS {
   constructor(url) {
     this.url = url
@@ -30,76 +29,126 @@ class FakeWS {
 global.WebSocket = FakeWS
 
 const fakeFetch = vi.fn(() =>
-  Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'T', exp: 9999 }) }),
+  Promise.resolve({ ok: true, json: () => Promise.resolve({ token: 'T' }) }),
 )
 global.fetch = fakeFetch
 
 beforeEach(() => {
   FakeWS.instances = []
   fakeFetch.mockClear()
+  vi.resetModules()
 })
 
-describe('clampInput', () => {
-  it('returns text unchanged when under limit', async () => {
-    const { clampInput } = await import('./useAgentSocket.js')
-    const r = clampInput('hi')
-    expect(r.text).toBe('hi')
-    expect(r.oversize).toBe(false)
-  })
-
-  it('truncates and reports oversize when over limit', async () => {
-    const { clampInput } = await import('./useAgentSocket.js')
-    const r = clampInput('x'.repeat(33000))
-    expect(r.text.length).toBe(32000)
-    expect(r.oversize).toBe(true)
-  })
-})
-
-describe('defaultUseAgentSocket', () => {
-  it('fetches token and opens WS with it', async () => {
+describe('useAgentSocket', () => {
+  it('fetches token and opens WebSocket on mount', async () => {
     const { default: useAgentSocket } = await import('./useAgentSocket.js')
-    renderHook(() => useAgentSocket({}))
+    renderHook(() => useAgentSocket())
     await waitFor(() => expect(FakeWS.instances.length).toBe(1))
     const ws = FakeWS.instances[0]
-    expect(ws.url).toMatch(/\?token=T/)
+    expect(fakeFetch).toHaveBeenCalledWith('/api/agent-token', { credentials: 'include' })
+    expect(ws.url).toBe('ws://localhost:4102')
   })
 
-  it('dispatches task_update and task_done', async () => {
-    const onUpdate = vi.fn()
-    const onDone = vi.fn()
+  it('sends auth message on open', async () => {
     const { default: useAgentSocket } = await import('./useAgentSocket.js')
-    renderHook(() => useAgentSocket({ onUpdate, onDone }))
+    renderHook(() => useAgentSocket())
     await waitFor(() => expect(FakeWS.instances.length).toBe(1))
     const ws = FakeWS.instances[0]
-    act(() => {
-      ws.listeners.message?.({ data: JSON.stringify({ type: 'task_update', payload: { delta: 'hi' } }) })
-      ws.listeners.message?.({ data: JSON.stringify({ type: 'task_done', payload: { content: 'done' } }) })
-    })
-    expect(onUpdate).toHaveBeenCalledWith({ delta: 'hi' })
-    expect(onDone).toHaveBeenCalledWith({ content: 'done' })
+    act(() => { ws._fire('open', {}) })
+    expect(ws.sent.length).toBe(1)
+    expect(JSON.parse(ws.sent[0])).toEqual({ type: 'auth', payload: { token: 'T' } })
   })
 
-  it('dispatches system_error to onError', async () => {
-    const onError = vi.fn()
+  it('calls onConnectionChange("ok") on hello and flushes pending queue', async () => {
+    const onConn = vi.fn()
     const { default: useAgentSocket } = await import('./useAgentSocket.js')
-    renderHook(() => useAgentSocket({ onError }))
+    const { result } = renderHook(() => useAgentSocket({ onConnectionChange: onConn }))
     await waitFor(() => expect(FakeWS.instances.length).toBe(1))
     const ws = FakeWS.instances[0]
-    act(() => {
-      ws.listeners.message?.({ data: JSON.stringify({ type: 'system_error', payload: { code: 'X' } }) })
-    })
-    expect(onError).toHaveBeenCalledWith({ code: 'X' })
+
+    // Queue a message before auth
+    act(() => { result.current.send({ text: 'hello' }) })
+
+    // Auth handshake
+    act(() => { ws._fire('open', {}) })
+    act(() => { ws._fire('message', { data: JSON.stringify({ type: 'hello' }) }) })
+
+    expect(onConn).toHaveBeenCalledWith('ok')
+    // After hello, pending message should be flushed
+    expect(ws.sent.length).toBe(2) // auth + user.message
+    expect(JSON.parse(ws.sent[1]).type).toBe('user.message')
   })
 
-  it('ignores unknown message types', async () => {
-    const onUpdate = vi.fn()
+  it('responds to ping with pong', async () => {
     const { default: useAgentSocket } = await import('./useAgentSocket.js')
-    renderHook(() => useAgentSocket({ onUpdate }))
+    renderHook(() => useAgentSocket())
     await waitFor(() => expect(FakeWS.instances.length).toBe(1))
     const ws = FakeWS.instances[0]
     act(() => {
-      ws.listeners.message?.({ data: JSON.stringify({ type: 'something_else' }) })
+      ws._fire('open', {})
+      ws._fire('message', { data: JSON.stringify({ type: 'hello' }) })
+      ws._fire('message', { data: JSON.stringify({ type: 'ping' }) })
     })
-    expect(onUpdate).not.toHaveBeenCalled()
+    const pongMsg = ws.sent.find(s => {
+      try { return JSON.parse(s).type === 'pong' } catch { return false }
+    })
+    expect(pongMsg).toBeTruthy()
+    expect(JSON.parse(pongMsg).payload.ts).toBeGreaterThan(0)
+  })
+
+  it('forwards non-control messages to onEvent', async () => {
+    const onEvent = vi.fn()
+    const { default: useAgentSocket } = await import('./useAgentSocket.js')
+    renderHook(() => useAgentSocket({ onEvent }))
+    await waitFor(() => expect(FakeWS.instances.length).toBe(1))
+    const ws = FakeWS.instances[0]
+    act(() => {
+      ws._fire('open', {})
+      ws._fire('message', { data: JSON.stringify({ type: 'hello' }) }) // control — ignored by onEvent
+      ws._fire('message', { data: JSON.stringify({ type: 'task_update', payload: { delta: 'hi' } }) })
+    })
+    // hello is swallowed; task_update reaches onEvent
+    expect(onEvent).toHaveBeenCalledTimes(1)
+    expect(onEvent).toHaveBeenCalledWith({ type: 'task_update', payload: { delta: 'hi' } })
+  })
+
+  it('queues messages sent before auth is complete', async () => {
+    const { default: useAgentSocket } = await import('./useAgentSocket.js')
+    const { result } = renderHook(() => useAgentSocket())
+    await waitFor(() => expect(FakeWS.instances.length).toBe(1))
+    act(() => { result.current.send({ text: 'queued' }) })
+    // Not yet authed — nothing should be on the wire beyond what connect() sends
+    expect(FakeWS.instances[0].sent.length).toBe(0)
+  })
+
+  it('calls onConnectionChange("reconnecting") on close (non-4000)', async () => {
+    const onConn = vi.fn()
+    const { default: useAgentSocket } = await import('./useAgentSocket.js')
+    renderHook(() => useAgentSocket({ onConnectionChange: onConn }))
+    await waitFor(() => expect(FakeWS.instances.length).toBe(1))
+    const ws = FakeWS.instances[0]
+
+    act(() => { ws._fire('close', { code: 1001, reason: 'going away' }) })
+    expect(onConn).toHaveBeenCalledWith('reconnecting')
+  })
+
+  it('calls onConnectionChange("failed") on close with code 4000', async () => {
+    const onConn = vi.fn()
+    const { default: useAgentSocket } = await import('./useAgentSocket.js')
+    renderHook(() => useAgentSocket({ onConnectionChange: onConn }))
+    await waitFor(() => expect(FakeWS.instances.length).toBe(1))
+    const ws = FakeWS.instances[0]
+
+    act(() => { ws._fire('close', { code: 4000, reason: 'bad token' }) })
+    expect(onConn).toHaveBeenCalledWith('failed')
+  })
+
+  it('closes WebSocket on unmount', async () => {
+    const { default: useAgentSocket } = await import('./useAgentSocket.js')
+    const { unmount } = renderHook(() => useAgentSocket())
+    await waitFor(() => expect(FakeWS.instances.length).toBe(1))
+    const ws = FakeWS.instances[0]
+    unmount()
+    expect(ws.readyState).toBe(3) // CLOSED
   })
 })
