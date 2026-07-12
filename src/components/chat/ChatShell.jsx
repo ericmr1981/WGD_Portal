@@ -196,7 +196,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
         setIsStreaming(false); setMessages((m) => m.map((msg) => msg.id === clientMsgId ? { ...msg, status: 'error' } : msg)); return
       }
     }
-    send({ conversationId: convId, content, attachments: (attachments || []).map((a) => ({ type: 'file', uploadId: a.uploadId, fileName: a.fileName, mimeType: a.mimeType, size: a.size })) })
+    send({ conversationId: convId, content: [{ type: 'text', text: content }], attachments: (attachments || []).map((a) => ({ type: 'file', file_id: a.uploadId, fileName: a.fileName, mimeType: a.mimeType, size: a.size })) })
   }
 
   const onCreate = async () => {
