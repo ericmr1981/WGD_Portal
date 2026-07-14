@@ -238,7 +238,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
           {!activeId && <span className="text-xs text-claude hidden sm:inline shrink-0">点「+ 新建」开始</span>}
         </header>
         {messages.length === 0 ? <EmptyState onPick={(c) => sendMessage({ content: c })} /> : <MessageList messages={messages} isStreaming={isStreaming} />}
-        <Composer onSend={sendMessage} disabled={isStreaming || !activeId} />
+        <Composer onSend={sendMessage} disabled={isStreaming} />
       </div>
     </div>
   )
