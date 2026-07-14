@@ -223,7 +223,7 @@ export default function ChatShell({ currentUser, isAdmin }) {
   const onOpenApp = (url) => { window.open(url, '_blank', 'noopener,noreferrer') }
 
   return (
-    <div className="chat-root h-screen overflow-hidden flex bg-paper">
+    <div className="chat-root h-dvh overflow-hidden flex bg-paper">
       <Sidebar sessions={sessions} activeId={activeId} onSelect={(id) => { setActiveId(id); setMobileOpen(false) }} onCreate={onCreate} onRename={onRename} onDelete={onDelete} isAdmin={isAdmin} onOpenAdmin={onOpenAdmin} currentUser={currentUser} apps={apps} onOpenApp={onOpenApp} mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} onLogout={async () => { await fetch('/api/auth/dev-logout', { method: 'POST', credentials: 'include' }); window.location.href = '/login' }} />
       <div className="flex-1 min-h-0 h-full flex flex-col">
         {/* Mobile + Tablet header */}

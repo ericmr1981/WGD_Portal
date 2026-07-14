@@ -68,7 +68,7 @@ export default function Sidebar({
       )}
       <aside
         className={`
-          w-[280px] h-screen min-h-0 bg-paper border-r border-line flex flex-col shrink-0 z-40
+          w-[280px] h-dvh min-h-0 bg-paper border-r border-line flex flex-col shrink-0 z-40
           fixed lg:static
           transition-transform duration-200
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
