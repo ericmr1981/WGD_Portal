@@ -1,0 +1,521 @@
+{
+  "communities": {
+    "0": [
+      "pages_api_agent_token",
+      "pages_api_agent_token_getsessionuserfromcookie",
+      "pages_api_agent_token_handler",
+      "pages_api_apps",
+      "pages_api_apps_handler",
+      "pages_api_apps_rationale_22",
+      "pages_api_auth_jwks",
+      "pages_api_auth_jwks_handler",
+      "pages_api_auth_jwks_json",
+      "pages_api_mock_agent_inbound",
+      "pages_api_mock_agent_inbound_handler",
+      "pages_api_mock_agent_stream",
+      "pages_api_mock_agent_stream_config",
+      "pages_api_mock_agent_stream_handler",
+      "pages_api_mock_agent_stream_pickreply",
+      "pages_api_mock_agent_stream_registerabort",
+      "pages_api_mock_agent_stream_streamtext",
+      "pages_api_mock_agent_stream_triggermockabort",
+      "pages_api_mock_agent_stream_unregisterabort",
+      "pages_api_sessions_id",
+      "pages_api_sessions_id_handler",
+      "pages_api_sessions_id_messages",
+      "pages_api_sessions_id_messages_handler",
+      "pages_api_sessions_index",
+      "pages_api_sessions_index_agentpath",
+      "pages_api_sessions_index_getbearer",
+      "pages_api_sessions_index_proxy",
+      "pages_api_uploads",
+      "pages_api_uploads_config",
+      "pages_api_uploads_handler",
+      "src_lib_agent_token",
+      "src_lib_agent_token_getagentjwks",
+      "src_lib_agent_token_getjose",
+      "src_lib_agent_token_getkeypair",
+      "src_lib_agent_token_signagenttoken",
+      "src_lib_auth",
+      "src_lib_auth_clearsessioncookie",
+      "src_lib_auth_getcurrentuser",
+      "src_lib_auth_login",
+      "src_lib_auth_logout",
+      "src_lib_auth_setsessioncookie",
+      "src_lib_auth_test"
+    ],
+    "1": [
+      "pages_admin_apps_adminappspage",
+      "pages_admin_index_adminpage",
+      "pages_admin_prompts_adminpromptspage",
+      "pages_admin_users_adminuserspage",
+      "pages_launch_id",
+      "pages_launch_id_launchpage",
+      "src_components_categorytabs",
+      "src_components_categorytabs_categorytabs",
+      "src_components_modal",
+      "src_components_modal_modal",
+      "src_components_searchbar",
+      "src_components_searchbar_searchbar",
+      "src_lib_auth_getsession",
+      "src_lib_auth_isadmin",
+      "src_lib_data",
+      "src_lib_data_admindeleteprompt",
+      "src_lib_data_admingetprompts",
+      "src_lib_data_adminupsertprompt",
+      "src_lib_data_createuser",
+      "src_lib_data_deleteapp",
+      "src_lib_data_deleteuser",
+      "src_lib_data_getapps",
+      "src_lib_data_getconfig",
+      "src_lib_data_getusers",
+      "src_lib_data_reorderapps",
+      "src_lib_data_resetpassword",
+      "src_lib_data_updateuser",
+      "src_lib_data_upsertapp",
+      "src_pages_admin_apps",
+      "src_pages_admin_apps_adminappspage",
+      "src_pages_admin_apps_emptyform",
+      "src_pages_admin_apps_iconoptions",
+      "src_pages_admin_index",
+      "src_pages_admin_index_adminpage",
+      "src_pages_admin_users",
+      "src_pages_admin_users_adminuserspage",
+      "src_pages_admin_users_emptyform",
+      "src_pages_index",
+      "src_pages_index_homepage",
+      "src_pages_launch_id",
+      "src_pages_launch_id_launchpage"
+    ],
+    "2": [
+      "autoprefixer",
+      "jsdom",
+      "package",
+      "package_devdependencies",
+      "package_devdependencies_autoprefixer",
+      "package_devdependencies_jsdom",
+      "package_devdependencies_playwright",
+      "package_devdependencies_postcss",
+      "package_devdependencies_tailwindcss",
+      "package_devdependencies_testing_library_react",
+      "package_devdependencies_types_node",
+      "package_devdependencies_typescript",
+      "package_devdependencies_vitest",
+      "package_devdependencies_vitest_coverage_v8",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_scripts_start",
+      "package_scripts_test",
+      "package_scripts_test_watch",
+      "package_version",
+      "playwright",
+      "postcss",
+      "tailwindcss",
+      "testing_library_react",
+      "types_node",
+      "typescript",
+      "vitest",
+      "vitest_coverage_v8"
+    ],
+    "3": [
+      "pages_chat_index",
+      "pages_chat_index_chatpage",
+      "pages_chat_index_parsejwtsub",
+      "pages_chat_index_readcookiesession",
+      "src_components_chat_chatshell",
+      "src_components_chat_chatshell_chatshell",
+      "src_components_chat_chatshell_normalizecontent",
+      "src_components_chat_chatshell_normalizesession",
+      "src_components_chat_composer",
+      "src_components_chat_composer_attachmentchip",
+      "src_components_chat_composer_autoresize",
+      "src_components_chat_composer_clampinput",
+      "src_components_chat_composer_composer",
+      "src_components_chat_composer_filetobase64",
+      "src_components_chat_composer_formatsize",
+      "src_components_chat_emptystate",
+      "src_components_chat_emptystate_emptystate",
+      "src_components_chat_emptystate_fallback_prompts",
+      "src_components_chat_markdownview",
+      "src_components_chat_markdownview_markdownview",
+      "src_components_chat_messagelist",
+      "src_components_chat_messagelist_animateddots",
+      "src_components_chat_messagelist_assistantavatar",
+      "src_components_chat_messagelist_grouptoolblocks",
+      "src_components_chat_messagelist_messagelist",
+      "src_components_chat_messagelist_streamingsections",
+      "src_components_chat_messagelist_toolgroupview",
+      "src_lib_data_getprompts",
+      "src_lib_useagentsocket",
+      "src_lib_useagentsocket_backoff_ms",
+      "src_lib_useagentsocket_useagentsocket"
+    ],
+    "4": [
+      "pages_admin_apps",
+      "pages_admin_apps_emptyform",
+      "pages_admin_apps_iconoptions",
+      "pages_admin_apps_sidebaritems",
+      "pages_admin_index",
+      "pages_admin_index_sidebaritems",
+      "pages_admin_prompts",
+      "pages_admin_prompts_emptyform",
+      "pages_admin_prompts_iconoptions",
+      "pages_admin_prompts_sidebaritems",
+      "pages_admin_users",
+      "pages_admin_users_emptyform",
+      "pages_admin_users_sidebaritems",
+      "src_components_admin_adminbutton",
+      "src_components_admin_adminbutton_adminbutton",
+      "src_components_admin_admincard",
+      "src_components_admin_admincard_admincard",
+      "src_components_admin_admininput",
+      "src_components_admin_admininput_admininput",
+      "src_components_admin_adminmodal",
+      "src_components_admin_adminmodal_adminmodal",
+      "src_components_admin_adminsidenav",
+      "src_components_admin_adminsidenav_adminsidenav",
+      "src_components_admin_admintopbar",
+      "src_components_admin_admintopbar_admintopbar"
+    ],
+    "5": [
+      "framer_motion",
+      "jose",
+      "jsonwebtoken",
+      "next",
+      "package_dependencies",
+      "package_dependencies_framer_motion",
+      "package_dependencies_jose",
+      "package_dependencies_jsonwebtoken",
+      "package_dependencies_next",
+      "package_dependencies_pg",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_react_markdown",
+      "package_dependencies_rehype_highlight",
+      "package_dependencies_remark_gfm",
+      "package_dependencies_supabase_supabase_js",
+      "pg",
+      "react",
+      "react_dom",
+      "react_markdown",
+      "rehype_highlight",
+      "remark_gfm",
+      "supabase_supabase_js"
+    ],
+    "6": [
+      "public_manifest",
+      "public_manifest_background_color",
+      "public_manifest_description",
+      "public_manifest_display",
+      "public_manifest_icons",
+      "public_manifest_lang",
+      "public_manifest_name",
+      "public_manifest_orientation",
+      "public_manifest_scope",
+      "public_manifest_short_name",
+      "public_manifest_start_url",
+      "public_manifest_theme_color"
+    ],
+    "7": [
+      "pages_api_auth_dev_login",
+      "pages_api_auth_dev_login_handler",
+      "pages_index",
+      "pages_index_homepage",
+      "pages_login",
+      "pages_login_loginpage",
+      "src_components_appcard",
+      "src_components_appcard_appcard",
+      "src_components_appcard_firstchar",
+      "src_lib_supabase",
+      "src_lib_supabase_supabase"
+    ],
+    "8": [
+      "src_lib_useagentsocket_test",
+      "src_lib_useagentsocket_test_fakefetch",
+      "src_lib_useagentsocket_test_fakews",
+      "src_lib_useagentsocket_test_fakews_close",
+      "src_lib_useagentsocket_test_fakews_constructor",
+      "src_lib_useagentsocket_test_fakews_fire",
+      "src_lib_useagentsocket_test_fakews_onclose",
+      "src_lib_useagentsocket_test_fakews_onerror",
+      "src_lib_useagentsocket_test_fakews_onmessage",
+      "src_lib_useagentsocket_test_fakews_onopen",
+      "src_lib_useagentsocket_test_fakews_send"
+    ],
+    "9": [
+      "jsconfig",
+      "jsconfig_compileroptions",
+      "jsconfig_compileroptions_baseurl",
+      "jsconfig_compileroptions_paths",
+      "jsconfig_include",
+      "jsconfig_paths_components",
+      "jsconfig_paths_lib",
+      "ref_src",
+      "ref_src_components",
+      "ref_src_lib"
+    ],
+    "10": [
+      "src_components_chat_appcard",
+      "src_components_chat_appcard_appcard",
+      "src_components_chat_appcard_firstchar",
+      "src_components_chat_footermenu",
+      "src_components_chat_footermenu_footermenu",
+      "src_components_chat_sidebar",
+      "src_components_chat_sidebar_groupsessions",
+      "src_components_chat_sidebar_sidebar"
+    ],
+    "11": [
+      "middleware",
+      "middleware_config",
+      "middleware_isprotected",
+      "middleware_middleware",
+      "middleware_parsesessionfromcookie",
+      "middleware_protected_patterns"
+    ],
+    "12": [
+      "netlify_edge_functions_proxy",
+      "netlify_edge_functions_proxy_config",
+      "netlify_edge_functions_proxy_parsecookie",
+      "netlify_edge_functions_proxy_redirecttologin",
+      "netlify_edge_functions_proxy_supabaserpc"
+    ],
+    "13": [
+      "scripts_probe_agent_ws",
+      "scripts_probe_agent_ws_done",
+      "scripts_probe_agent_ws_frames",
+      "scripts_probe_agent_ws_ws"
+    ],
+    "14": [
+      "scripts_probe_agent_ws_full",
+      "scripts_probe_agent_ws_full_selfsignmode",
+      "scripts_probe_agent_ws_full_usetokenmode"
+    ],
+    "15": [
+      "scripts_probe_portal_token",
+      "scripts_probe_portal_token_match",
+      "scripts_probe_portal_token_setcookie"
+    ],
+    "16": [
+      "src_components_chat_steplist",
+      "src_components_chat_steplist_stepicon",
+      "src_components_chat_steplist_steplist"
+    ],
+    "17": [
+      "src_pages_app",
+      "src_pages_app_app",
+      "src_pages_app_publicpaths"
+    ],
+    "18": [
+      "next_config",
+      "next_config_nextconfig"
+    ],
+    "19": [
+      "pages_404",
+      "pages_404_custom404"
+    ],
+    "20": [
+      "pages_api_auth_dev_logout",
+      "pages_api_auth_dev_logout_handler"
+    ],
+    "21": [
+      "pages_app",
+      "pages_app_app"
+    ],
+    "22": [
+      "pages_document",
+      "pages_document_document"
+    ],
+    "23": [
+      "scripts_verify_chat",
+      "scripts_verify_chat_errors"
+    ],
+    "24": [
+      "src_pages_404",
+      "src_pages_404_custom404"
+    ],
+    "25": [
+      "src_pages_document",
+      "src_pages_document_document"
+    ],
+    "26": [
+      "postcss_config"
+    ],
+    "27": [
+      "scripts_verify_chat2"
+    ],
+    "28": [
+      "scripts_verify_chat3"
+    ],
+    "29": [
+      "scripts_verify_chat_e2e"
+    ],
+    "30": [
+      "src_components_admin_modal"
+    ],
+    "31": [
+      "src_config_apps"
+    ],
+    "32": [
+      "src_lib_agent_token_test"
+    ],
+    "33": [
+      "tailwind_config"
+    ],
+    "34": [
+      "vitest_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.09872241579558652,
+    "1": 0.15609756097560976,
+    "2": 0.06451612903225806,
+    "3": 0.0989247311827957,
+    "4": 0.19,
+    "5": 0.08695652173913043,
+    "6": 0.16666666666666666,
+    "7": 0.2727272727272727,
+    "8": 0.2,
+    "9": 0.2,
+    "10": 0.39285714285714285,
+    "11": 0.5333333333333333,
+    "12": 0.4,
+    "13": 0.5,
+    "14": 0.6666666666666666,
+    "15": 0.6666666666666666,
+    "16": 0.6666666666666666,
+    "17": 0.6666666666666666,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_lib_auth_getsession",
+      "label": "getSession()",
+      "degree": 36
+    },
+    {
+      "id": "src_lib_auth_isadmin",
+      "label": "isAdmin()",
+      "degree": 18
+    },
+    {
+      "id": "src_lib_auth_getcurrentuser",
+      "label": "getCurrentUser()",
+      "degree": 16
+    },
+    {
+      "id": "src_lib_data_getapps",
+      "label": "getApps()",
+      "degree": 15
+    },
+    {
+      "id": "src_lib_agent_token_signagenttoken",
+      "label": "signAgentToken()",
+      "degree": 11
+    },
+    {
+      "id": "src_lib_data_getconfig",
+      "label": "getConfig()",
+      "degree": 11
+    },
+    {
+      "id": "src_lib_data_getusers",
+      "label": "getUsers()",
+      "degree": 10
+    },
+    {
+      "id": "src_lib_useagentsocket_test_fakews",
+      "label": "FakeWS",
+      "degree": 9
+    },
+    {
+      "id": "pages_admin_apps_adminappspage",
+      "label": "AdminAppsPage()",
+      "degree": 8
+    },
+    {
+      "id": "pages_admin_users_adminuserspage",
+      "label": "AdminUsersPage()",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "handler()",
+      "target": "getCurrentUser()",
+      "source_files": [
+        "pages/api/apps.js",
+        "src/lib/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `handler()` unexpectedly reaches hub `getCurrentUser()`"
+    },
+    {
+      "source": "handler()",
+      "target": "getCurrentUser()",
+      "source_files": [
+        "pages/api/uploads.js",
+        "src/lib/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `handler()` unexpectedly reaches hub `getCurrentUser()`"
+    },
+    {
+      "source": "ChatPage()",
+      "target": "getSession()",
+      "source_files": [
+        "pages/chat/index.jsx",
+        "src/lib/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "AdminAppsPage()",
+      "target": "getSession()",
+      "source_files": [
+        "pages/admin/apps.jsx",
+        "src/lib/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "AdminAppsPage()",
+      "target": "isAdmin()",
+      "source_files": [
+        "pages/admin/apps.jsx",
+        "src/lib/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}
