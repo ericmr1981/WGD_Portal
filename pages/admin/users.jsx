@@ -25,6 +25,9 @@ export default function AdminUsersPage() {
   const [modal, setModal] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const [saveSuccess, setSaveSuccess] = useState('')
 
   useEffect(() => {
     if (!getSession()) { router.replace('/login'); return }
@@ -41,24 +44,49 @@ export default function AdminUsersPage() {
   const handleSave = async () => {
     if (!form.username.trim() || !form.name.trim()) return
     if (modal.mode === 'add' && !form.password.trim()) return
+    setSaving(true)
+    setSaveError('')
+    setSaveSuccess('')
 
-    if (modal.mode === 'add') {
-      await createUser({
-        username: form.username,
-        password: form.password,
-        name: form.name,
-        role: form.role,
-      })
-    } else {
-      await updateUser(modal.user.id, { name: form.name, role: form.role })
-      if (form.password) {
-        await resetPassword(modal.user.id, form.password)
+    try {
+      if (modal.mode === 'add') {
+        const result = await createUser({
+          username: form.username,
+          password: form.password,
+          name: form.name,
+          role: form.role,
+        })
+        if (!result?.success) {
+          setSaveError(result?.error || '添加用户失败')
+          setSaving(false)
+          return
+        }
+      } else {
+        const updateResult = await updateUser(modal.user.id, { name: form.name, role: form.role })
+        if (!updateResult?.success) {
+          setSaveError(updateResult?.error || '更新用户失败')
+          setSaving(false)
+          return
+        }
+        if (form.password) {
+          const resetResult = await resetPassword(modal.user.id, form.password)
+          if (!resetResult?.success) {
+            setSaveError(resetResult?.error || '重置密码失败')
+            setSaving(false)
+            return
+          }
+          setSaveSuccess('保存成功')
+        } else {
+          setSaveSuccess('保存成功')
+        }
       }
-    }
 
-    await loadUsers()
-    setModal(null)
-    setForm(emptyForm)
+      await loadUsers()
+      setModal(null)
+      setForm(emptyForm)
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleDelete = async () => {
@@ -129,7 +157,7 @@ export default function AdminUsersPage() {
             ))}
           </div>
 
-          <AdminModal open={!!modal} onClose={() => { setModal(null); setForm(emptyForm) }} title={modal?.mode === 'add' ? '添加用户' : '编辑用户'}>
+          <AdminModal open={!!modal} onClose={() => { setModal(null); setForm(emptyForm); setSaveError(''); setSaveSuccess('') }} title={modal?.mode === 'add' ? '添加用户' : '编辑用户'}>
             <div className="space-y-4">
               <AdminInput label="用户名" value={form.username} onChange={(e) => setForm({...form, username: e.target.value})} />
               <AdminInput label="显示名称" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} />
@@ -142,8 +170,10 @@ export default function AdminUsersPage() {
                   <option value="admin">管理员</option>
                 </select>
               </div>
-              <AdminButton onClick={handleSave} className="w-full justify-center">
-                {modal?.mode === 'add' ? '添加' : '保存'}
+              {saveError && <p className="text-red-500 text-sm text-center">{saveError}</p>}
+              {saveSuccess && <p className="text-green-600 text-sm text-center">{saveSuccess}</p>}
+              <AdminButton onClick={handleSave} disabled={saving} className="w-full justify-center">
+                {saving ? '保存中…' : (modal?.mode === 'add' ? '添加' : '保存')}
               </AdminButton>
             </div>
           </AdminModal>
